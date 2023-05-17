@@ -1,0 +1,273 @@
+---
+title: "FedData"
+author: "Vadym Yudenko"
+date: "2023-05-16"
+output:
+  flexdashboard::flex_dashboard:
+    theme: 
+      version: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
+```
+
+```{r}
+
+# Loading libraries
+library(rvest)
+library(xml2)
+library(ggplot2)
+library(tidyverse)
+library(writexl)
+library(readxl)
+library(flexdashboard)
+```
+
+
+
+## Scrapping
+
+```{r}
+# copy and paste the link in the brackets and run the code
+html <- read_html('https://www.federalreserve.gov/releases/h8/20230505/')
+```
+
+```{r}
+tables <- list()
+
+# Loop over the sequence of numbers
+for (i in 1:11) {
+  
+  id <- paste0("#h8t", i)
+  
+  # Scrape the table using table's id
+  table <- html %>% 
+    html_nodes(id) %>% 
+    html_table(fill = TRUE)
+  
+  tables[[paste0("table_", i)]] <- table
+}
+
+colnames <- c("Date", "Bank credit", 
+  "Securities in bank credit", 
+  "Treasury and agency securities",
+  "Mortgage-backed securities (MBS)",
+  "Non-MBS",
+  "Other securities",
+  "Mortgage-backed securities (MBS) other",
+  "Non-MBS other",
+  "Loans and leases in bank credit", 
+  "Commercial and industrial loans", 
+  "Real estate loans",                                 
+  "Residential real estate loans",                      
+  "Revolving home equity loans",                       
+  "Closed-end residential loans",                    
+  "Commercial real estate loans",
+  "Construction and land development loans",
+  "Secured by farmland",
+  "Secured by multifamily properties",
+  "Secured by nonfarm nonresidential properties",
+  "Consumer loans",                                     
+  "Credit cards and other revolving plans",             
+  "Other consumer loans", 
+  "Automobile loans",
+  "All other consumer loans",
+  "All other loans and leases",  
+  "Loans to nondepository financial institutions",
+  "All loans not elsewhere classified",
+  "LESS: Allowance for loan and lease losses",          
+  "Cash assets",                                    
+  "Total federal funds sold and reverse RPs",       
+  "Loans to commercial banks",                      
+  "Other assets including trading assets",          
+  "Total assets", 
+  "Deposits",                                           
+  "Large time deposits",                                
+  "Other deposits",                                     
+  "Borrowings",  
+  "Net due to related foreign offices",
+  "Other liabilities including trading liabilities",
+  "Total liabilities",
+  "Residual (Assets LESS Liabilities)") 
+
+colnames <- gsub(" ", "_", colnames)
+
+today <- as.Date(format(Sys.Date(), "%Y-%m-%d"))
+
+```
+
+```{r}
+# loading historical data from https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H8
+# from the beginning to May 3rd
+Commercial_Banks_SA_weekly <- read.csv("Commercial_Banks_SA_weekly.csv")
+Commercial_Banks_NSA_weekly <- read.csv("Commercial_Banks_NSA_weekly.csv")
+Domestic_SA_weekly <- read.csv("Domestic_SA_weekly.csv")
+Domestic_NSA_weekly <- read.csv("Domestic_NSA_weekly.csv")
+Large_Domestic_SA_weekly <- read.csv("Large_Domestic_SA_weekly.csv")
+Large_Domestic_NSA_weekly <- read.csv("Large_Domestic_NSA_weekly.csv")
+Small_Domestic_SA_weekly <- read.csv("Small_Domestic_SA_weekly.csv")
+Small_Domestic_NSA_weekly <- read.csv("Small_Domestic_NSA_weekly.csv")
+Foreign_SA_weekly <- read.csv("Foreign_SA_weekly.csv")
+Foreign_NSA_weekly <- read.csv("Foreign_NSA_weekly.csv")
+
+# naming columns
+colnames(Commercial_Banks_SA_weekly) <- colnames
+colnames(Commercial_Banks_NSA_weekly) <- colnames
+colnames(Domestic_SA_weekly) <- colnames
+colnames(Domestic_NSA_weekly) <- colnames
+colnames(Large_Domestic_SA_weekly) <- colnames
+colnames(Large_Domestic_NSA_weekly) <- colnames
+colnames(Small_Domestic_SA_weekly) <- colnames
+colnames(Small_Domestic_NSA_weekly) <- colnames
+colnames(Foreign_SA_weekly) <- colnames
+colnames(Foreign_NSA_weekly) <- colnames
+
+# convert string to date format
+Commercial_Banks_SA_weekly$Date <- as.Date(Commercial_Banks_SA_weekly$Date, format = "%m/%d/%Y")
+Commercial_Banks_NSA_weekly$Date <- as.Date(Commercial_Banks_NSA_weekly$Date, format = "%m/%d/%Y")
+Domestic_SA_weekly$Date <- as.Date(Domestic_SA_weekly$Date, format = "%m/%d/%Y")
+Domestic_NSA_weekly$Date <- as.Date(Domestic_NSA_weekly$Date, format = "%m/%d/%Y")
+Large_Domestic_SA_weekly$Date <- as.Date(Large_Domestic_SA_weekly$Date, format = "%m/%d/%Y")
+Large_Domestic_NSA_weekly$Date <- as.Date(Large_Domestic_NSA_weekly$Date, format = "%m/%d/%Y")
+Small_Domestic_SA_weekly$Date <- as.Date(Small_Domestic_SA_weekly$Date, format = "%m/%d/%Y")
+Small_Domestic_NSA_weekly$Date <- as.Date(Small_Domestic_NSA_weekly$Date, format = "%m/%d/%Y")
+Foreign_SA_weekly$Date <- as.Date(Foreign_SA_weekly$Date, format = "%m/%d/%Y")
+Foreign_NSA_weekly$Date <- as.Date(Foreign_NSA_weekly$Date, format = "%m/%d/%Y")
+
+# historical data is in millions $. converting to billions to match updated data 
+Commercial_Banks_SA_weekly[,c(2:42)] <- Commercial_Banks_SA_weekly[,c(2:42)] / 1000 
+Commercial_Banks_NSA_weekly[,c(2:42)] <- Commercial_Banks_NSA_weekly[,c(2:42)] / 1000 
+Domestic_SA_weekly[,c(2:42)] <- Domestic_SA_weekly[,c(2:42)] / 1000 
+Domestic_NSA_weekly[,c(2:42)] <- Domestic_NSA_weekly[,c(2:42)] / 1000 
+Large_Domestic_SA_weekly[,c(2:42)] <- Large_Domestic_SA_weekly[,c(2:42)] / 1000 
+Large_Domestic_NSA_weekly[,c(2:42)] <- Large_Domestic_NSA_weekly[,c(2:42)] / 1000 
+Small_Domestic_SA_weekly[,c(2:42)] <- Small_Domestic_SA_weekly[,c(2:42)] / 1000 
+Small_Domestic_NSA_weekly[,c(2:42)] <- Small_Domestic_NSA_weekly[,c(2:42)] / 1000 
+Foreign_SA_weekly[,c(2:42)] <- Foreign_SA_weekly[,c(2:42)] / 1000 
+Foreign_NSA_weekly[,c(2:42)] <- Foreign_NSA_weekly[,c(2:42)] / 1000 
+```
+
+```{r}
+# the following code extracts the this week's latest release, cleans it and makes prepares it to be added to the historic data
+update_table <- function(table_index) {
+  table_name <- paste0("table_", table_index)
+  data <- data.frame(tables[[table_name]])
+  latest <- matrix(data$Week.ending.3, nrow = 1) %>% .[, -c(1, 2, 36, 37)]
+  latest <- matrix(as.numeric(gsub(",", "", latest)), nrow = 1)
+  update <- data.frame(Date = today, latest)
+  colnames(update) <- colnames
+  return(update)
+}
+
+# Table 2. Assets and Liabilities of Commercial Banks in the United States
+# Seasonally adjusted, billions of dollars.
+update_2 <- update_table(2)
+
+# Table 3. Assets and Liabilities of Commercial Banks in the United States
+# Not seasonally adjusted, billions of dollars.
+update_3 <- update_table(3)
+
+# Table 4. Assets and Liabilities of Domestically Chartered Commercial Banks in the United States
+# Seasonally adjusted, billions of dollars.
+update_4 <- update_table(4)
+
+# Table 5. Assets and Liabilities of Domestically Chartered Commercial Banks in the United States
+# Not seasonally adjusted, billions of dollars.
+update_5 <- update_table(5)
+
+# Table 6. Assets and Liabilities of Large Domestically Chartered Commercial Banks in the United States
+# Seasonally adjusted, billions of dollars.
+update_6 <- update_table(6)
+
+# Table 7. Assets and Liabilities of Large Domestically Chartered Commercial Banks in the United States
+# Not seasonally adjusted, billions of dollars.
+update_7 <- update_table(7)
+
+# Table 8. Assets and Liabilities of Small Domestically Chartered Commercial Banks in the United States
+# Seasonally adjusted, billions of dollars.
+update_8 <- update_table(8)
+
+# Table 9. Assets and Liabilities of Small Domestically Chartered Commercial Banks in the United States 
+# Not seasonally adjusted, billions of dollars.
+update_9 <- update_table(9)
+
+# Table 10. Assets and Liabilities of Foreign-Related Institutions in the United States
+# Seasonally adjusted, billions of dollars.
+update_10 <- update_table(10)
+
+# Table 11. Assets and Liabilities of Foreign-Related Institutions in the United States
+# Not seasonally adjusted, billions of dollars.
+update_11 <- update_table(11)
+
+```
+
+
+```{r}
+# updating the historic data with updated
+Commercial_Banks_SA_weekly <- rbind(Commercial_Banks_SA_weekly, update_2)
+Commercial_Banks_NSA_weekly <- rbind(Commercial_Banks_NSA_weekly, update_3)
+Domestic_SA_weekly <- rbind(Domestic_SA_weekly, update_4)
+Domestic_NSA_weekly <- rbind(Domestic_NSA_weekly, update_5)
+Large_Domestic_SA_weekly <- rbind(Large_Domestic_SA_weekly, update_6)
+Large_Domestic_NSA_weekly <- rbind(Large_Domestic_NSA_weekly, update_7)
+Small_Domestic_SA_weekly <- rbind(Small_Domestic_SA_weekly, update_8)
+Small_Domestic_NSA_weekly <- rbind(Small_Domestic_NSA_weekly, update_9)
+Foreign_SA_weekly <- rbind(Foreign_SA_weekly, update_10)
+Foreign_NSA_weekly <- rbind(Foreign_NSA_weekly, update_11)
+```
+
+## EDA
+
+```{r}
+Commercial_Banks_SA_weekly %>% 
+  tail(n = 26) %>% 
+  ggplot(aes(x = Date, y = Bank_credit)) +
+  geom_line(size = 2) +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
+  labs(title = "Commercial Banks Bank Credit",
+       subtitle = "in billions $") +
+  theme_classic() +
+  theme(panel.grid.major = element_line()) +
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+        axis.title = element_blank(),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
+        axis.text = element_text(size = 10, family = "Times"),
+        plot.margin = unit(c(1,1,1,1), "cm"),
+         plot.caption = element_text(face = "bold", family = "Times"))
+```
+
+
+
+
+## Saving to Excel
+
+```{r}
+# Create a list of data frames
+data_list <- list(
+  Commercial_Banks_SA_weekly = Commercial_Banks_SA_weekly,
+  Commercial_Banks_NSA_weekly = Commercial_Banks_NSA_weekly,
+  Domestic_SA_weekly = Domestic_SA_weekly,
+  Domestic_NSA_weekly = Domestic_NSA_weekly,
+  Large_Domestic_SA_weekly = Large_Domestic_SA_weekly,
+  Large_Domestic_NSA_weekly = Large_Domestic_NSA_weekly,
+  Small_Domestic_SA_weekly = Small_Domestic_SA_weekly,
+  Small_Domestic_NSA_weekly = Small_Domestic_NSA_weekly,
+  Foreign_SA_weekly = Foreign_SA_weekly,
+  Foreign_NSA_weekly = Foreign_NSA_weekly
+)
+
+# Write the list to an Excel file
+write_xlsx(data_list, "Assets and Liabilities of Commercial Banks in the United States.xlsx")
+```
+
+
+
+
+
+
+
+
+
+
