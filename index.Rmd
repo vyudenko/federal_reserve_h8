@@ -1,5 +1,6 @@
 ---
 title: "FEDRES H.8"
+runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -234,29 +235,28 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  # Your data frames
-  data_list <- list(
-    Commercial_Banks_SA_weekly = Commercial_Banks_SA_weekly,
-    Commercial_Banks_NSA_weekly = Commercial_Banks_NSA_weekly,
-    Domestic_SA_weekly = Domestic_SA_weekly,
-    Domestic_NSA_weekly = Domestic_NSA_weekly,
-    Large_Domestic_SA_weekly = Large_Domestic_SA_weekly,
-    Large_Domestic_NSA_weekly = Large_Domestic_NSA_weekly,
-    Small_Domestic_SA_weekly = Small_Domestic_SA_weekly,
-    Small_Domestic_NSA_weekly = Small_Domestic_NSA_weekly,
-    Foreign_SA_weekly = Foreign_SA_weekly,
-    Foreign_NSA_weekly = Foreign_NSA_weekly
-  )
-
-  # Write the list to an Excel file
-  write_xlsx(data_list, "Assets and Liabilities of Commercial Banks in the United States.xlsx")
-
+  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste('data-', Sys.Date(), '.xlsx', sep='')
     },
     content = function(file) {
-      file.copy("Assets and Liabilities of Commercial Banks in the United States.xlsx", file)
+      # Your data frames
+      data_list <- list(
+        Commercial_Banks_SA_weekly = Commercial_Banks_SA_weekly,
+        Commercial_Banks_NSA_weekly = Commercial_Banks_NSA_weekly,
+        Domestic_SA_weekly = Domestic_SA_weekly,
+        Domestic_NSA_weekly = Domestic_NSA_weekly,
+        Large_Domestic_SA_weekly = Large_Domestic_SA_weekly,
+        Large_Domestic_NSA_weekly = Large_Domestic_NSA_weekly,
+        Small_Domestic_SA_weekly = Small_Domestic_SA_weekly,
+        Small_Domestic_NSA_weekly = Small_Domestic_NSA_weekly,
+        Foreign_SA_weekly = Foreign_SA_weekly,
+        Foreign_NSA_weekly = Foreign_NSA_weekly
+      )
+
+      # Write the list to an Excel file
+      write_xlsx(data_list, path = file)
     }
   )
 }
