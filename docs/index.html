@@ -1,0 +1,4207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>FEDRES H.8</title>
+
+<meta property="og:title" content="FEDRES H.8" />
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+
+<link rel="icon" href="data:image/x-icon;" type="image/x-icon">
+
+
+<script type="text/javascript">
+window.FlexDashboardComponents = [];
+</script>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link href="site_libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script>
+<script src="site_libs/bs3compat-0.4.2/transition.js"></script>
+<script src="site_libs/bs3compat-0.4.2/tabs.js"></script>
+<script src="site_libs/bs3compat-0.4.2/bs3compat.js"></script>
+<link href="site_libs/flexdashboard-css-0.6.1/flexdashboard-css.css" rel="stylesheet" />
+<script src="site_libs/stickytableheaders-0.1.19/jquery.stickytableheaders.min.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<style type="text/css">
+/*
+  CSS for flexdashboard.js' use of Sly(). The sizing/position of this CSS needs to be
+  applied _before_ flexdashboard.js initializes, which is why this CSS has been pulled
+  out from flexdashboard.scss and inlined in the document's head.
+*/
+
+.storyboard-nav button {
+  background: transparent;
+  border: 0;
+  opacity: .3;
+  outline: none;
+  padding: 0;
+}
+
+.storyboard-nav button:hover,
+.storyboard-nav button:hover {
+  opacity: .5;
+}
+
+.storyboard-nav button:disabled,
+.storyboard-nav button:disabled {
+  opacity: .1;
+}
+
+.storyboard-nav .sbnext,
+.storyboard-nav .sbprev {
+  float: left;
+  width: 2%;
+  height: 120px;
+}
+
+.storyboard-nav .sbprev {
+  text-align: left;
+  width: 2%;
+}
+
+.storyboard-nav .sbnext {
+  float: right;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.storyboard-nav .sbframelist {
+  margin: 0 auto;
+  width: 94%;
+  height: 120px;
+  overflow: hidden;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+
+.storyboard-nav .sbframelist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.storyboard-nav .sbframelist ul li {
+  float: left;
+  width: 270px;
+  height: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-right: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.storyboard-nav .sbframelist ul li:last-child {
+  margin-right: 0px;
+}
+
+.sbframe-commentary {
+  width: 300px;
+}
+
+.sbframe-commentary ul {
+  padding-left: 22px;
+}
+
+.sbframe.active {
+  display: flex;
+}
+
+.sbframe:not(.active) {
+  display: none;
+}
+@media only screen and (min-width: 768px) {
+html, body {
+  height: 100%;
+}
+
+#dashboard-container {
+  height: 100%;
+}
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+
+<span class="navbar-logo pull-left">
+  
+</span>
+<span class="navbar-brand">
+  FEDRES H.8
+  <span class="navbar-author">
+        </span>
+</span>
+
+<button id="navbar-button" type="button" class="navbar-toggle collapsed pull-right" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-left">
+</ul>
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div><!--/.nav-collapse-->
+</div><!--/.container-->
+</div><!--/.navbar-->
+
+<img class="mobile-figure" data-mobile-figure-id=fig1 src="index_files/figure-html/unnamed-chunk-5-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig2 src="index_files/figure-html/unnamed-chunk-6-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig3 src="index_files/figure-html/unnamed-chunk-7-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig4 src="index_files/figure-html/unnamed-chunk-8-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig5 src="index_files/figure-html/unnamed-chunk-10-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig6 src="index_files/figure-html/unnamed-chunk-11-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig7 src="index_files/figure-html/unnamed-chunk-12-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig8 src="index_files/figure-html/unnamed-chunk-13-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig9 src="index_files/figure-html/unnamed-chunk-15-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig10 src="index_files/figure-html/unnamed-chunk-16-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig11 src="index_files/figure-html/unnamed-chunk-17-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig12 src="index_files/figure-html/unnamed-chunk-18-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig13 src="index_files/figure-html/unnamed-chunk-20-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig14 src="index_files/figure-html/unnamed-chunk-21-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig15 src="index_files/figure-html/unnamed-chunk-22-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig16 src="index_files/figure-html/unnamed-chunk-23-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig17 src="index_files/figure-html/unnamed-chunk-25-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig18 src="index_files/figure-html/unnamed-chunk-26-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig19 src="index_files/figure-html/unnamed-chunk-27-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig20 src="index_files/figure-html/unnamed-chunk-28-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig21 src="index_files/figure-html/unnamed-chunk-30-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig22 src="index_files/figure-html/unnamed-chunk-31-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig23 src="index_files/figure-html/unnamed-chunk-32-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig24 src="index_files/figure-html/unnamed-chunk-33-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig25 src="index_files/figure-html/unnamed-chunk-35-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig26 src="index_files/figure-html/unnamed-chunk-36-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig27 src="index_files/figure-html/unnamed-chunk-37-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig28 src="index_files/figure-html/unnamed-chunk-38-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig29 src="index_files/figure-html/unnamed-chunk-40-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig30 src="index_files/figure-html/unnamed-chunk-41-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig31 src="index_files/figure-html/unnamed-chunk-42-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig32 src="index_files/figure-html/unnamed-chunk-43-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig33 src="index_files/figure-html/unnamed-chunk-45-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig34 src="index_files/figure-html/unnamed-chunk-46-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig35 src="index_files/figure-html/unnamed-chunk-47-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig36 src="index_files/figure-html/unnamed-chunk-48-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig37 src="index_files/figure-html/unnamed-chunk-50-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig38 src="index_files/figure-html/unnamed-chunk-51-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig39 src="index_files/figure-html/unnamed-chunk-52-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig40 src="index_files/figure-html/unnamed-chunk-53-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig41 src="index_files/figure-html/unnamed-chunk-55-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig42 src="index_files/figure-html/unnamed-chunk-56-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig43 src="index_files/figure-html/unnamed-chunk-57-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig44 src="index_files/figure-html/unnamed-chunk-58-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig45 src="index_files/figure-html/unnamed-chunk-60-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig46 src="index_files/figure-html/unnamed-chunk-61-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig47 src="index_files/figure-html/unnamed-chunk-62-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig48 src="index_files/figure-html/unnamed-chunk-63-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig49 src="index_files/figure-html/unnamed-chunk-65-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig50 src="index_files/figure-html/unnamed-chunk-66-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig51 src="index_files/figure-html/unnamed-chunk-67-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig52 src="index_files/figure-html/unnamed-chunk-68-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig53 src="index_files/figure-html/unnamed-chunk-70-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig54 src="index_files/figure-html/unnamed-chunk-71-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig55 src="index_files/figure-html/unnamed-chunk-72-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig56 src="index_files/figure-html/unnamed-chunk-73-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig57 src="index_files/figure-html/unnamed-chunk-75-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig58 src="index_files/figure-html/unnamed-chunk-76-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig59 src="index_files/figure-html/unnamed-chunk-77-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig60 src="index_files/figure-html/unnamed-chunk-78-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig61 src="index_files/figure-html/unnamed-chunk-80-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig62 src="index_files/figure-html/unnamed-chunk-81-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig63 src="index_files/figure-html/unnamed-chunk-82-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig64 src="index_files/figure-html/unnamed-chunk-83-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig65 src="index_files/figure-html/unnamed-chunk-85-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig66 src="index_files/figure-html/unnamed-chunk-86-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig67 src="index_files/figure-html/unnamed-chunk-87-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig68 src="index_files/figure-html/unnamed-chunk-88-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig69 src="index_files/figure-html/unnamed-chunk-90-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig70 src="index_files/figure-html/unnamed-chunk-91-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig71 src="index_files/figure-html/unnamed-chunk-92-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig72 src="index_files/figure-html/unnamed-chunk-93-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig73 src="index_files/figure-html/unnamed-chunk-95-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig74 src="index_files/figure-html/unnamed-chunk-96-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig75 src="index_files/figure-html/unnamed-chunk-97-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig76 src="index_files/figure-html/unnamed-chunk-98-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig77 src="index_files/figure-html/unnamed-chunk-100-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig78 src="index_files/figure-html/unnamed-chunk-101-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig79 src="index_files/figure-html/unnamed-chunk-102-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig80 src="index_files/figure-html/unnamed-chunk-103-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig81 src="index_files/figure-html/unnamed-chunk-105-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig82 src="index_files/figure-html/unnamed-chunk-106-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig83 src="index_files/figure-html/unnamed-chunk-107-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig84 src="index_files/figure-html/unnamed-chunk-108-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig85 src="index_files/figure-html/unnamed-chunk-110-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig86 src="index_files/figure-html/unnamed-chunk-111-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig87 src="index_files/figure-html/unnamed-chunk-112-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig88 src="index_files/figure-html/unnamed-chunk-113-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig89 src="index_files/figure-html/unnamed-chunk-115-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig90 src="index_files/figure-html/unnamed-chunk-116-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig91 src="index_files/figure-html/unnamed-chunk-117-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig92 src="index_files/figure-html/unnamed-chunk-118-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig93 src="index_files/figure-html/unnamed-chunk-120-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig94 src="index_files/figure-html/unnamed-chunk-121-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig95 src="index_files/figure-html/unnamed-chunk-122-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig96 src="index_files/figure-html/unnamed-chunk-123-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig97 src="index_files/figure-html/unnamed-chunk-125-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig98 src="index_files/figure-html/unnamed-chunk-126-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig99 src="index_files/figure-html/unnamed-chunk-127-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig100 src="index_files/figure-html/unnamed-chunk-128-1.mb.png" />
+<script type="text/javascript">
+
+
+var FlexDashboard = (function () {
+
+  // initialize options
+  var _options = {};
+
+  var FlexDashboard = function() {
+
+    // default options
+    _options = $.extend(_options, {
+      theme: "cosmo",
+      fillPage: false,
+      orientation: 'columns',
+      storyboard: false,
+      defaultFigWidth: 576,
+      defaultFigHeight: 461,
+      defaultFigWidthMobile: 360,
+      defaultFigHeightMobile: 461,
+      isMobile: false,
+      isPortrait: false,
+      resize_reload: true
+    });
+  };
+
+  function init(options) {
+
+    // extend default options
+    $.extend(true, _options, options);
+
+    // add ids to sections that don't have them (pandoc won't assign ids
+    // to e.g. sections with titles consisting of only chinese characters)
+    var nextId = 1;
+    $('.level1:not([id]),.level2:not([id]),.level3:not([id])').each(function() {
+      $(this).attr('id', 'dashboard-' + nextId++);
+    });
+
+    // find navbar items
+    var navbarItems = $('#flexdashboard-navbar');
+    if (navbarItems.length)
+      navbarItems = JSON.parse(navbarItems.html());
+    addNavbarItems(navbarItems);
+
+    // find the main dashboard container
+    var dashboardContainer = $('#dashboard-container');
+
+    // resolve mobile classes
+    resolveMobileClasses(dashboardContainer);
+
+    // one time global initialization for components
+    componentsInit(dashboardContainer);
+
+    // look for a global sidebar
+    var globalSidebar = dashboardContainer.find(".section.level1.sidebar");
+    if (globalSidebar.length > 0) {
+
+      // global layout for fullscreen displays
+      if (!isMobilePhone()) {
+
+         // hoist it up to the top level
+         globalSidebar.insertBefore(dashboardContainer);
+
+         // lay it out (set width/positions)
+         layoutSidebar(globalSidebar, dashboardContainer);
+
+      // tuck sidebar into first page for mobile phones
+      } else {
+
+        // convert it into a level3 section
+        globalSidebar.removeClass('sidebar');
+        globalSidebar.removeClass('level1');
+        globalSidebar.addClass('level3');
+        var h1 = globalSidebar.children('h1');
+        var h3 = $('<h3></h3>');
+        h3.append(h1.contents());
+        h3.insertBefore(h1);
+        h1.detach();
+
+        // move it into the first page
+        var page = dashboardContainer.find('.section.level1').first();
+        if (page.length > 0)
+          page.prepend(globalSidebar);
+      }
+    }
+
+    // look for pages to layout
+    var pages = $('div.section.level1');
+    if (pages.length > 0) {
+
+        // find the navbar and collapse on clicked
+        var navbar = $('#navbar');
+        navbar.on("click", "a[data-toggle!=dropdown]", null, function () {
+           navbar.collapse('hide');
+        });
+
+        // envelop the dashboard container in a tab content div
+        dashboardContainer.wrapInner('<div class="tab-content"></div>');
+
+        pages.each(function(index) {
+
+          // lay it out
+          layoutDashboardPage($(this));
+
+          // add it to the navbar
+          addToNavbar($(this), index === 0);
+
+        });
+
+    } else {
+
+      // remove the navbar and navbar button if we don't
+      // have any navbuttons
+      if (navbarItems.length === 0) {
+        $('#navbar').remove();
+        $('#navbar-button').remove();
+      }
+
+      // add the storyboard class if requested
+      if (_options.storyboard)
+        dashboardContainer.addClass('storyboard');
+
+      // layout the entire page
+      layoutDashboardPage(dashboardContainer);
+    }
+
+    // if we are in shiny we need to trigger a window resize event to
+    // force correct layout of shiny-bound-output elements
+    if (isShinyDoc())
+      $(window).trigger('resize');
+
+    // make main components visible
+    $('.section.sidebar').css('visibility', 'visible');
+    dashboardContainer.css('visibility', 'visible');
+
+    // handle location hash
+    handleLocationHash();
+
+    // intialize prism highlighting
+    initPrismHighlighting();
+
+    // record mobile and orientation state then register a handler
+    // to refresh if resize_reload is set to true and it changes
+    _options.isMobile = isMobilePhone();
+    _options.isPortrait = isPortrait();
+    if (_options.resize_reload) {
+      $(window).on('resize', function() {
+        if (_options.isMobile !== isMobilePhone() ||
+            _options.isPortrait !== isPortrait()) {
+          window.location.reload();
+        }
+      });
+    } else {
+      // if in desktop mode and resizing to mobile, make sure the heights are 100%
+      // This enforces what `fillpage.css` does for "wider" pages.
+      // Since we are not reloading once the page becomes small, we need to force the height to 100%
+      // This is a new situation introduced when `_options.resize_reload` is `false`
+      if (! _options.isMobile) {
+        // only add if `fillpage.css` was added in the first place
+        if (_options.fillPage) {
+          // fillpage.css
+          $("html,body,#dashboard").css("height", "100%");
+        }
+      }
+    }
+    // trigger layoutcomplete event
+    dashboardContainer.trigger('flexdashboard:layoutcomplete');
+  }
+
+  function resolveMobileClasses(dashboardContainer) {
+     // add top level layout class
+    dashboardContainer.addClass(isMobilePhone() ? 'mobile-layout' :
+                                                  'desktop-layout');
+
+    // look for .mobile sections and add .no-mobile to their peers
+    var mobileSections = $('.section.mobile');
+    mobileSections.each(function() {
+       var id = $(this).attr('id');
+       var nomobileId = id.replace(/-\d+$/, '');
+       $('#' + nomobileId).addClass('no-mobile');
+    });
+  }
+
+  function addNavbarItems(navbarItems) {
+
+    var navbarLeft = $('ul.navbar-left');
+    var navbarRight = $('ul.navbar-right');
+
+    for (var i = 0; i<navbarItems.length; i++) {
+
+      // get the item
+      var item = navbarItems[i];
+
+      // determine the container
+      var container = null;
+      if (item.align === "left")
+        container = navbarLeft;
+      else
+        container = navbarRight;
+
+      // navbar menu if we have multiple items
+      if (item.items) {
+        var menu = navbarMenu(null, item.icon, item.title, container);
+        for (var j = 0; j<item.items.length; j++) {
+          var subItem = item.items[j];
+          var li = $('<li></li>');
+          var a = navbarLink(subItem.icon, subItem.title, subItem.href, subItem.target);
+          a.removeClass("nav-link").addClass("dropdown-item");
+          li.append(a);
+          menu.append(li);
+        }
+      } else {
+        var li = $('<li class="nav-item"></li>');
+        li.append(navbarLink(item.icon, item.title, item.href, item.target));
+        container.append(li);
+      }
+    }
+  }
+
+  // create or get a reference to an existing dropdown menu
+  function navbarMenu(id, icon, title, container) {
+    var existingMenu = [];
+    if (id)
+      existingMenu = container.children('#' + id);
+    if (existingMenu.length > 0) {
+      return existingMenu.children('ul');
+    } else {
+      var li = $('<li class="nav-item"></li>');
+      if (id)
+        li.attr('id', id);
+      li.addClass('dropdown');
+      // auto add "Share" title on mobile if necessary
+      if (!title && icon && (icon === "fa-share-alt") && isMobilePhone())
+        title = "Share";
+      if (title) {
+        title = title + ' <span class="caret"></span>';
+      }
+      var a = navbarLink(icon, title, "#");
+      a.addClass('dropdown-toggle');
+      a.attr('data-toggle', 'dropdown');
+      a.attr('data-bs-toggle', 'dropdown');
+      a.attr('role', 'button');
+      a.attr('aria-expanded', 'false');
+      li.append(a);
+      var ul = $('<ul class="dropdown-menu"></ul>');
+      ul.attr('role', 'menu');
+      li.append(ul);
+      container.append(li);
+      return ul;
+    }
+  }
+
+  function addToNavbar(page, active) {
+
+    // capture the id and data-icon attribute (if any)
+    var id = page.attr('id');
+    var icon = page.attr('data-icon');
+    var navmenu = page.attr('data-navmenu');
+
+    // get hidden state (transfer this to navbar)
+    var hidden = page.hasClass('hidden');
+    page.removeClass('hidden');
+
+    // sanitize the id for use with bootstrap tabs
+    id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+    page.attr('id', id);
+
+    // get the wrapper
+    var wrapper = page.closest('.dashboard-page-wrapper');
+
+    // move the id to the wrapper
+    page.removeAttr('id');
+    wrapper.attr('id', id);
+
+    // add the tab-pane class to the wrapper
+    wrapper.addClass('tab-pane');
+    if (active)
+      wrapper.addClass('active');
+
+    // get a reference to the h1, discover its inner contens, then detach it
+    var h1 = wrapper.find('h1').first();
+    var title = h1.contents();
+    h1.detach();
+
+    // create a navbar item
+    var li = $('<li></li>');
+    var a = navbarLink(icon, title, '#' + id);
+    a.attr('data-toggle', 'tab');
+    li.append(a);
+
+    // add it to the navbar (or navbar menu if specified)
+    var container = $('ul.navbar-left');
+    if (navmenu) {
+      var menuId = navmenu.replace(/\s+/g, '');
+      var menu = navbarMenu(menuId, null, navmenu, container);
+      li.find("> a").removeClass("nav-link").addClass("dropdown-item");
+      menu.append(li);
+    } else {
+      li.addClass("nav-item")
+      container.append(li);
+    }
+
+    // hide it if requested
+    if (hidden)
+      li.addClass('hidden');
+  }
+
+  function navbarLink(icon, title, href, target) {
+
+    var a = $('<a class="nav-link"></a>');
+    if (icon) {
+
+      // get the name of the icon set and icon
+      var dashPos = icon.indexOf("-");
+      var iconSet = null;
+      var iconSplit = icon.split(" ");
+      if (iconSplit.length > 1) {
+        iconSet = iconSplit[0];
+        icon = iconSplit.slice(1).join(" ");
+      } else {
+        iconSet = icon.substring(0, dashPos);
+      }
+      var iconName = icon.substring(dashPos + 1);
+
+      // create the icon
+      var iconElement = $('<span class="' + iconSet + ' ' + icon + '"></span>');
+      if (title)
+        iconElement.css('margin-right', '7px');
+      a.append(iconElement);
+      // if href is null see if we can auto-generate based on icon (e.g. social)
+      if (!href)
+        maybeGenerateLinkFromIcon(iconName, a);
+    }
+    if (title)
+      a.append(title);
+
+    // add the href.
+    if (href) {
+      if (href === "source_embed") {
+        a.attr('href', '#');
+        a.attr('data-featherlight', "#flexdashboard-source-code");
+        a.featherlight({
+            beforeOpen: function(event){
+              $('body').addClass('unselectable');
+            },
+            afterClose: function(event){
+              $('body').removeClass('unselectable');
+            }
+        });
+      } else {
+        a.attr('href', href);
+      }
+    }
+
+    // add the arget
+    if (target)
+      a.attr('target', target);
+
+    return a;
+  }
+
+  // auto generate a link from an icon name (e.g. twitter) when possible
+  function maybeGenerateLinkFromIcon(iconName, a) {
+
+     var serviceLinks = {
+      "twitter": "https://twitter.com/share?text=" + encodeURIComponent(document.title) + "&url="+encodeURIComponent(location.href),
+      "facebook": "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+encodeURIComponent(location.href),
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url="+encodeURIComponent(location.href) + "&title=" + encodeURIComponent(document.title),
+      "pinterest": "https://pinterest.com/pin/create/link/?url="+encodeURIComponent(location.href) + "&description=" + encodeURIComponent(document.title)
+    };
+
+    var makeSocialLink = function(a, href) {
+      a.attr('href', '#');
+      a.on('click', function(e) {
+        e.preventDefault();
+        window.open(href);
+      });
+    };
+
+    $.each(serviceLinks, function(key, value) {
+      if (iconName.indexOf(key) !== -1)
+        makeSocialLink(a, value);
+    });
+  }
+
+  // layout a dashboard page
+  function layoutDashboardPage(page) {
+
+    // use a page wrapper so that free form content above the
+    // dashboard appears at the top rather than the side (as it
+    // would without the wrapper in a column orientation)
+    var wrapper = $('<div class="dashboard-page-wrapper"></div>');
+    page.wrap(wrapper);
+
+    // if there are no level2 or level3 headers synthesize a level3
+    // header to contain the (e.g. frame it, scroll container, etc.)
+    var headers = page.find('h2,h3');
+    if (headers.length === 0)
+      page.wrapInner('<div class="section level3"></div>');
+
+    // hoist up any content before level 2 or level 3 headers
+    var children = page.children();
+    children.each(function(index) {
+      if ($(this).hasClass('level2') || $(this).hasClass('level3'))
+        return false;
+      $(this).insertBefore(page);
+    });
+
+    // determine orientation and fillPage behavior for distinct media
+    var orientation, fillPage, storyboard;
+
+    // media: mobile phone
+    if (isMobilePhone()) {
+
+      // if there is a sidebar we need to ensure it's content
+      // is properly framed as an h3
+      var sidebar = page.find('.section.sidebar');
+      sidebar.removeClass('sidebar');
+      sidebar.wrapInner('<div class="section level3"></div>');
+      var h2 = sidebar.find('h2');
+      var h3 = $('<h3></h3>');
+      h3.append(h2.contents());
+      h3.insertBefore(h2);
+      h2.detach();
+
+      // wipeout h2 elements then enclose them in a single h2
+      var level2 = page.find('div.section.level2');
+      level2.each(function() {
+        level2.children('h2').remove();
+        level2.children().unwrap();
+      });
+      page.wrapInner('<div class="section level2"></div>');
+
+      // substitute mobile images
+      if (isPortrait()) {
+        var mobileFigures = $('img.mobile-figure');
+        mobileFigures.each(function() {
+          // get the src (might be base64 encoded)
+          var src = $(this).attr('src');
+
+          // find it's peer
+          var id = $(this).attr('data-mobile-figure-id');
+          var img = $('img[data-figure-id=' + id + "]");
+          img.attr('src', src)
+             .attr('width', _options.defaultFigWidthMobile)
+             .attr('height', _options.defaultFigHeightMobile);
+        });
+      }
+
+      // hoist storyboard commentary into it's own section
+      if (page.hasClass('storyboard')) {
+        var commentaryHR = page.find('div.section.level3 hr');
+        commentaryHR.each(function() {
+          var commentary = $(this).nextAll().detach();
+          var commentarySection = $('<div class="section level3"></div>');
+          commentarySection.append(commentary);
+          commentarySection.insertAfter($(this).closest('div.section.level3'));
+          $(this).remove();
+        });
+      }
+
+      // force a non full screen layout by columns
+      orientation = _options.orientation = 'columns';
+      fillPage = _options.fillPage = false;
+      storyboard = _options.storyboard = false;
+
+    // media: desktop
+    } else {
+
+      // determine orientation
+      orientation = page.attr('data-orientation');
+      if (orientation !== 'rows' && orientation != 'columns')
+        orientation = _options.orientation;
+
+      // determine storyboard mode
+      storyboard = page.hasClass('storyboard');
+
+      // fillPage based on options (force for storyboard)
+      fillPage = _options.fillPage || storyboard;
+
+      // handle sidebar
+      var sidebar = page.find('.section.level2.sidebar');
+      if (sidebar.length > 0)
+        layoutSidebar(sidebar, page);
+    }
+
+    // give it and it's parent divs height: 100% if we are in fillPage mode
+    if (fillPage) {
+      page.addClass('vertical-layout-fill');
+      page.css('height', '100%');
+      page.parents('div').css('height', '100%');
+    } else {
+      page.addClass('vertical-layout-scroll');
+    }
+
+    // perform the layout
+    if (storyboard)
+      layoutPageAsStoryboard(page);
+    else if (orientation === 'rows')
+      layoutPageByRows(page, fillPage);
+    else if (orientation === 'columns')
+      layoutPageByColumns(page, fillPage);
+  }
+
+  function layoutSidebar(sidebar, content) {
+
+    // get it out of the header hierarchy
+    sidebar = sidebar.first();
+    if (sidebar.hasClass('level1')) {
+      sidebar.removeClass('level1');
+      sidebar.children('h1').remove();
+    } else if (sidebar.hasClass('level2')) {
+      sidebar.removeClass('level2');
+      sidebar.children('h2').remove();
+    }
+
+    // determine width
+    var sidebarWidth = isTablet() ? 220 : 250;
+    var dataWidth = parseInt(sidebar.attr('data-width'));
+    if (dataWidth)
+      sidebarWidth = dataWidth;
+
+    // set the width and shift the page right to accomodate the sidebar
+    sidebar.css('width', sidebarWidth + 'px');
+    content.css('padding-left', sidebarWidth + 'px');
+
+    // wrap it's contents in a form
+    sidebar.wrapInner($('<form></form>'));
+  }
+
+  function layoutPageAsStoryboard(page) {
+
+    // create storyboard navigation
+    var nav = $('<div class="storyboard-nav"></div>');
+
+    // add navigation buttons
+    var prev = $('<button class="sbprev"><i class="fa fa-angle-left"></i></button>');
+    nav.append(prev);
+    var next= $('<button class="sbnext"><i class="fa fa-angle-right"></i></button>');
+    nav.append(next);
+
+    // add navigation frame
+    var frameList = $('<div class="sbframelist"></div>');
+    nav.append(frameList);
+    var ul = $('<ul></ul>');
+    frameList.append(ul);
+
+     // find all the level3 sections (those are the storyboard frames)
+    var frames = page.find('div.section.level3');
+    frames.each(function() {
+
+      // mark it
+      $(this).addClass('sbframe');
+
+      // divide it into chart content and (optional) commentary
+      $(this).addClass('dashboard-column-orientation');
+
+      // stuff the chart into it's own div w/ flex
+      $(this).wrapInner('<div class="sbframe-component"></div>');
+      setFlex($(this), 1);
+      var frame = $(this).children('.sbframe-component');
+
+      // extract the title from the h3
+      var li = $('<li></li>');
+      var h3 = frame.children('h3');
+      li.append(h3.contents());
+      h3.detach();
+      ul.append(li);
+
+      // extract commentary
+      var hr = frame.children('hr');
+      if (hr.length) {
+        var commentary = hr.nextAll().detach();
+        hr.remove();
+        var commentaryFrame = $('<div class="sbframe-commentary"></div>');
+        commentaryFrame.addClass('flowing-content-shim');
+        commentaryFrame.addClass('flowing-content-container');
+        commentaryFrame.append(commentary);
+        $(this).append(commentaryFrame);
+
+        // look for a data-commentary-width attribute
+        var commentaryWidth = $(this).attr('data-commentary-width');
+        if (commentaryWidth)
+          commentaryFrame.css('width', commentaryWidth + 'px');
+      }
+
+      // layout the chart (force flex)
+      var result = layoutChart(frame, true);
+
+      // ice the notes if there are none
+      if (!result.notes)
+        frame.find('.chart-notes').remove();
+
+      // set flex on chart
+      setFlex(frame, 1);
+    });
+
+    // create a div to hold all the frames
+    var frameContent = $('<div class="sbframe-content"></div>');
+    frameContent.addClass('dashboard-row-orientation');
+    frameContent.append(frames.detach());
+
+    // row orientation to stack nav and frame content
+    page.addClass('dashboard-row-orientation');
+    page.append(nav);
+    page.append(frameContent);
+    setFlex(frameContent, 1);
+
+    // initialize sly
+    var sly = new Sly(frameList, {
+    		horizontal: true,
+    		itemNav: 'basic',
+    		smart: true,
+    		activateOn: 'click',
+    		startAt: 0,
+    		scrollBy: 1,
+    		activatePageOn: 'click',
+    		speed: 200,
+    		moveBy: 600,
+    		dragHandle: true,
+    		dynamicHandle: true,
+    		clickBar: true,
+    		keyboardNavBy: 'items',
+    		next: next,
+    		prev: prev
+    	}).init();
+
+    // make first frame active
+    frames.removeClass('active');
+    frames.first().addClass('active');
+
+    // subscribe to frame changed events
+    sly.on('active', function (eventName, itemIndex) {
+      frames.removeClass('active');
+      frames.eq(itemIndex).addClass('active')
+                          .trigger('shown');
+    });
+  }
+
+  function layoutPageByRows(page, fillPage) {
+
+    // row orientation
+    page.addClass('dashboard-row-orientation');
+
+    // find all the level2 sections (those are the rows)
+    var rows = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (rows.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      rows = page.find('div.section.level2');
+    }
+
+    rows.each(function () {
+
+      // flags
+      var haveNotes = false;
+      var haveFlexHeight = true;
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // give it row layout semantics if it's not a tabset
+      if (!isTabset)
+        $(this).addClass('dashboard-row');
+
+      // find all of the level 3 subheads
+      var columns = $(this).find('div.section.level3');
+
+      // determine figureSizes sizes
+      var figureSizes = chartFigureSizes(columns);
+
+      // fixup the columns
+      columns.each(function(index) {
+
+        // layout the chart (force flex if we are in a tabset)
+        var result = layoutChart($(this), isTabset);
+
+        // update flexHeight state
+        if (!result.flex)
+          haveFlexHeight = false;
+
+        // update state
+        if (result.notes)
+          haveNotes = true;
+
+        // set the column flex based on the figure width
+        // (value boxes will just get the default figure width)
+        var chartWidth = figureSizes[index].width;
+        setFlex($(this), chartWidth + ' ' + chartWidth + ' 0px');
+
+      });
+
+      // remove empty chart note divs
+      if (isTabset)
+        $(this).find('.chart-notes').filter(function() {
+            return $(this).html() === "&nbsp;";
+        }).remove();
+      if (!haveNotes)
+        $(this).find('.chart-notes').remove();
+
+       // make it a flexbox row
+      if (haveFlexHeight)
+        $(this).addClass('dashboard-row-flex');
+
+      // now we can set the height on all the wrappers (based on maximum
+      // figure height + room for title and notes, or data-height on the
+      // container if specified). However, don't do this if there is
+      // no flex on any of the constituent columns
+      var flexHeight = null;
+      var dataHeight = parseInt($(this).attr('data-height'));
+      if (dataHeight)
+        flexHeight = adjustedHeight(dataHeight, columns.first());
+      else if (haveFlexHeight)
+        flexHeight = maxChartHeight(figureSizes, columns);
+      if (flexHeight) {
+        if (fillPage)
+          setFlex($(this), flexHeight + ' ' + flexHeight + ' 0px');
+        else {
+          $(this).css('height', flexHeight + 'px');
+          setFlex($(this), '0 0 ' + flexHeight + 'px');
+        }
+      }
+
+    });
+  }
+
+  function layoutPageByColumns(page, fillPage) {
+
+    // column orientation
+    page.addClass('dashboard-column-orientation');
+
+    // find all the level2 sections (those are the columns)
+    var columns = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (columns.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      columns = page.find('div.section.level2');
+    }
+
+    // layout each column
+    columns.each(function (index) {
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // make it a flexbox column
+      $(this).addClass('dashboard-column');
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // find all the h3 elements
+      var rows = $(this).find('div.section.level3');
+
+      // get the figure sizes for the rows
+      var figureSizes = chartFigureSizes(rows);
+
+      // column flex is the max row width (or data-width if specified)
+      var flexWidth;
+      var dataWidth = parseInt($(this).attr('data-width'));
+      if (dataWidth)
+        flexWidth = dataWidth;
+      else
+        flexWidth = maxChartWidth(figureSizes);
+      setFlex($(this), flexWidth + ' ' + flexWidth + ' 0px');
+
+      // layout each chart
+      rows.each(function(index) {
+
+        // perform the layout
+        var result = layoutChart($(this), false);
+
+        // ice the notes if there are none
+        if (!result.notes)
+          $(this).find('.chart-notes').remove();
+
+        // set flex height based on figHeight, then adjust
+        if (result.flex) {
+          var chartHeight = figureSizes[index].height;
+          chartHeight = adjustedHeight(chartHeight, $(this));
+          if (fillPage)
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' 0px');
+          else {
+            $(this).css('height', chartHeight + 'px');
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' ' + chartHeight + 'px');
+          }
+        }
+      });
+    });
+  }
+
+  function chartFigureSizes(charts) {
+
+    // sizes
+    var figureSizes = new Array(charts.length);
+
+    // check each chart
+    charts.each(function(index) {
+
+      // start with default
+      figureSizes[index] = {
+        width: _options.defaultFigWidth,
+        height: _options.defaultFigHeight
+      };
+
+      // look for data-height or data-width then knit options
+      var dataWidth = parseInt($(this).attr('data-width'));
+      var dataHeight = parseInt($(this).attr('data-height'));
+      var knitrOptions = $(this).find('.knitr-options:first');
+      var knitrWidth, knitrHeight;
+      if (knitrOptions) {
+        knitrWidth = parseInt(knitrOptions.attr('data-fig-width'));
+        knitrHeight =  parseInt(knitrOptions.attr('data-fig-height'));
+      }
+
+      // width
+      if (dataWidth)
+        figureSizes[index].width = dataWidth;
+      else if (knitrWidth)
+        figureSizes[index].width = knitrWidth;
+
+      // height
+      if (dataHeight)
+        figureSizes[index].height = dataHeight;
+      else if (knitrHeight)
+        figureSizes[index].height = knitrHeight;
+    });
+
+    // return sizes
+    return figureSizes;
+  }
+
+  function maxChartHeight(figureSizes, charts) {
+
+    // first compute the maximum height
+    var maxHeight = _options.defaultFigHeight;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].height > maxHeight)
+        maxHeight = figureSizes[i].height;
+
+    // now add offests for chart title and chart notes
+    if (charts.length)
+      maxHeight = adjustedHeight(maxHeight, charts.first());
+
+    return maxHeight;
+  }
+
+  function adjustedHeight(height, chart) {
+    if (chart.length > 0) {
+      var chartTitle = chart.find('.chart-title');
+      if (chartTitle.length)
+        height += chartTitle.first().outerHeight();
+      var chartNotes = chart.find('.chart-notes');
+      if (chartNotes.length)
+        height += chartNotes.first().outerHeight();
+    }
+    return height;
+  }
+
+  function maxChartWidth(figureSizes) {
+    var maxWidth = _options.defaultFigWidth;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].width > maxWidth)
+        maxWidth = figureSizes[i].width;
+    return maxWidth;
+  }
+
+  // layout a chart
+  function layoutChart(chart, forceFlex) {
+
+    // state to return
+    var result = {
+      notes: false,
+      flex: false
+    };
+
+    // extract the title
+    var title = extractTitle(chart);
+
+    // find components that apply to this container
+    var components = componentsFind(chart);
+
+    // if it's a custom component then call it and return
+    var customComponents = componentsCustom(components);
+    if (customComponents.length) {
+      componentsLayout(customComponents, title, chart);
+      result.notes = false;
+      result.flex = forceFlex || componentsFlex(customComponents);
+      return result;
+    }
+
+    // put all the content in a chart wrapper div
+    chart.addClass('chart-wrapper');
+    chart.wrapInner('<div class="chart-stage"></div>');
+    var chartContent = chart.children('.chart-stage');
+
+    // flex the content if appropriate
+    result.flex = forceFlex || componentsFlex(components);
+    if (result.flex) {
+      // add flex classes
+      chart.addClass('chart-wrapper-flex');
+      chartContent.addClass('chart-stage-flex');
+
+      // additional shim to break out of flexbox sizing
+      chartContent.wrapInner('<div class="chart-shim"></div>');
+      chartContent = chartContent.children('.chart-shim');
+    }
+
+    // set custom data-padding attribute
+    var pad = chart.attr('data-padding');
+    if (pad) {
+      if (pad === "0")
+        chart.addClass('no-padding');
+      else {
+        pad = pad + 'px';
+        chartContent.css('left', pad)
+                    .css('top', pad)
+                    .css('right', pad)
+                    .css('bottom', pad)
+      }
+    }
+
+    // call compoents
+    componentsLayout(components, title, chartContent);
+
+    // also activate components on shiny output
+    findShinyOutput(chartContent).on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+
+          // see if we opted out of flex based on our output (for shiny
+          // we can't tell what type of output we have until after the
+          // value is bound)
+          var components = componentsFind(element);
+          var flex = forceFlex || componentsFlex(components);
+          if (!flex) {
+            chart.css('height', "");
+            setFlex(chart, "");
+            chart.removeClass('chart-wrapper-flex');
+            chartContent.removeClass('chart-stage-flex');
+            chartContent.children().unwrap();
+          }
+
+          // perform layout
+          componentsLayout(components, title, element.parent());
+        }, 10);
+      });
+
+    // add the title
+    var chartTitle = $('<div class="chart-title"></div>');
+    chartTitle.append(title);
+    chart.prepend(chartTitle);
+
+    // add the notes section
+    var chartNotes = $('<div class="chart-notes"></div>');
+    chartNotes.html('&nbsp;');
+    chart.append(chartNotes);
+
+    // attempt to extract notes if we have a component
+    if (components.length)
+      result.notes = extractChartNotes(chartContent, chartNotes);
+
+    // return result
+    return result;
+  }
+
+  // build a tabset from a section div with the .tabset class
+  function layoutTabset(tabset) {
+
+    // check for fade option
+    var fade = tabset.hasClass("tabset-fade");
+    var pills = tabset.hasClass("tabset-pills");
+    var navClass = pills ? "nav-pills" : "nav-tabs";
+
+    // determine the heading level of the tabset and tabs
+    var match = tabset.attr('class').match(/level(\d) /);
+    if (match === null)
+      return;
+    var tabsetLevel = Number(match[1]);
+    var tabLevel = tabsetLevel + 1;
+
+    // find all subheadings immediately below
+    var tabs = tabset.find("div.section.level" + tabLevel);
+    if (!tabs.length)
+      return;
+
+    // create tablist and tab-content elements
+    var tabList = $('<ul class="nav ' + navClass + '" role="tablist"></ul>');
+    $(tabs[0]).before(tabList);
+    var tabContent = $('<div class="tab-content"></div>');
+    $(tabs[0]).before(tabContent);
+
+    // build the tabset
+    var activeTab = 0;
+    tabs.each(function(i) {
+
+      // get the tab div
+      var tab = $(tabs[i]);
+
+      // get the id then sanitize it for use with bootstrap tabs
+      var id = tab.attr('id');
+
+      // see if this is marked as the active tab
+      if (tab.hasClass('active'))
+        activeTab = i;
+
+      // sanitize the id for use with bootstrap tabs
+      id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+      tab.attr('id', id);
+
+      // get the heading element within it and grab it's text
+      var heading = tab.find('h' + tabLevel + ':first');
+      var headingDom = heading.contents();
+
+      // build and append the tab list item
+      var a = $('<a role="tab" data-toggle="tab" class="nav-link"></a>');
+      a.append(headingDom);
+      a.attr('href', '#' + id);
+      a.attr('aria-controls', id);
+      var li = $('<li role="presentation" class="nav-item"></li>');
+      li.append(a);
+      tabList.append(li);
+
+      // set it's attributes
+      tab.attr('role', 'tabpanel');
+      tab.addClass('tab-pane');
+      tab.addClass('tabbed-pane');
+      tab.addClass('no-title');
+      if (fade)
+        tab.addClass('fade');
+
+      // move it into the tab content div
+      tab.detach().appendTo(tabContent);
+    });
+
+    // set active tab
+    $(tabList.children()[activeTab]).tab("show");
+    var active = $(tabContent.children('div.section')[activeTab]);
+    active.addClass('active');
+    if (fade)
+      active.addClass('in');
+
+    // add nav-tabs-custom
+    tabset.addClass('nav-tabs-custom');
+
+    // internal layout is dashboard-column with tab-content flexing
+    tabset.addClass('dashboard-column');
+    setFlex(tabContent, 1);
+  }
+
+  // one time global initialization for components
+  function componentsInit(dashboardContainer) {
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.init)
+        component.init(dashboardContainer);
+    }
+  }
+
+  // find components that apply within a container
+  function componentsFind(container) {
+
+    // look for components
+    var components = [];
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.find(container).length)
+        components.push(component);
+    }
+
+    // if there were none then use a special flowing content component
+    // that just adds a scrollbar in fillPage mode
+    if (components.length == 0) {
+      components.push({
+        find: function(container) {
+          return container;
+        },
+
+        flex: function(fillPage) {
+          return fillPage;
+        },
+
+        layout: function(title, container, element, fillPage) {
+          if (fillPage) {
+            container.addClass('flowing-content-shim');
+            container.addClass('flowing-content-container');
+          }
+        }
+      });
+    }
+
+    return components;
+  }
+
+  // if there is a custom component then pick it out
+  function componentsCustom(components) {
+    var customComponent = [];
+    for (var i=0; i<components.length; i++)
+      if (components[i].type === "custom") {
+        customComponent.push(components[i]);
+        break;
+      }
+    return customComponent;
+  }
+
+  // query all components for flex
+  function componentsFlex(components) {
+
+    // no components at all means no flex
+    if (components.length === 0)
+      return false;
+
+    // otherwise query components (assume true unless we see false)
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++)
+      if (components[i].flex && !components[i].flex(_options.fillPage))
+        return false;
+    return true;
+  }
+
+  // layout all components
+  function componentsLayout(components, title, container) {
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++) {
+      var element = components[i].find(container);
+      if (components[i].layout) {
+        // call layout (don't call other components if it returns false)
+        var result = components[i].layout(title, container, element, _options.fillPage);
+        if (result === false)
+          return;
+      }
+    }
+  }
+
+  // get a reference to the h3, discover it's inner html, and remove it
+  function extractTitle(container) {
+    var h3 = container.children('h3').first();
+    var title = '';
+    if (!container.hasClass('no-title'))
+      title = h3.contents();
+    h3.detach();
+    return title;
+  }
+
+  // extract chart notes
+  function extractChartNotes(chartContent, chartNotes) {
+    // look for a terminating blockquote or image caption
+    var blockquote = chartContent.children('blockquote:last-child');
+    var caption = chartContent.children('div.image-container')
+                              .children('p.caption');
+    if (blockquote.length) {
+      chartNotes.empty().append(blockquote.children('p:first-child').contents());
+      blockquote.remove();
+      return true;
+    } else if (caption.length) {
+      chartNotes.empty().append(caption.contents());
+      caption.remove();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function findShinyOutput(chartContent) {
+    return chartContent.find('.shiny-text-output, .shiny-html-output');
+  }
+
+  // safely detect rendering on a mobile phone
+  function isMobilePhone() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  function isFillPage() {
+    return _options.fillPage;
+  }
+
+  // detect portrait mode
+  function isPortrait() {
+    return ($(window).width() < $(window).height());
+  }
+
+  // safely detect rendering on a tablet
+  function isTablet() {
+    try
+    {
+      return window.matchMedia("only screen and (min-width: 769px) and (max-width: 992px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  // test whether this is a shiny doc
+  function isShinyDoc() {
+    return (typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings);
+  }
+
+  // set flex using vendor specific prefixes
+  function setFlex(el, flex) {
+    el.css('-webkit-box-flex', flex)
+      .css('-webkit-flex', flex)
+      .css('-ms-flex', flex)
+      .css('flex', flex);
+  }
+
+  // support bookmarking of pages
+  function handleLocationHash() {
+
+    // restore tab/page from bookmark
+    var hash = window.decodeURIComponent(window.location.hash);
+    if (hash.length > 0)
+      $('ul.nav a[href="' + hash + '"]').tab('show');
+    FlexDashboardUtils.manageActiveNavbarMenu();
+
+    // navigate to a tab when the history changes
+    window.addEventListener("popstate", function(e) {
+      var hash = window.decodeURIComponent(window.location.hash);
+      var activeTab = $('ul.nav a[href="' + hash + '"]');
+      if (activeTab.length) {
+        activeTab.tab('show');
+      } else {
+        $('ul.nav a:first').tab('show');
+      }
+      FlexDashboardUtils.manageActiveNavbarMenu();
+    });
+
+    // add a hash to the URL when the user clicks on a tab/page
+    $('.navbar-nav a[data-toggle="tab"]').on('click', function(e) {
+      var baseUrl = FlexDashboardUtils.urlWithoutHash(window.location.href);
+      var hash = FlexDashboardUtils.urlHash($(this).attr('href'));
+      var href = baseUrl + hash;
+      FlexDashboardUtils.setLocation(href);
+    });
+
+    // handle clicks of other links that should activate pages
+    var navPages = $('ul.navbar-nav li a[data-toggle=tab]');
+    navPages.each(function() {
+      var href =  $(this).attr('href');
+      var links = $('a[href="' + href + '"][data-toggle!=tab]');
+      links.each(function() {
+        $(this).on('click', function(e) {
+          window.FlexDashboardUtils.showPage(href);
+        });
+      });
+    });
+  }
+
+  // tweak Prism highlighting
+  function initPrismHighlighting() {
+
+    if (window.Prism) {
+      Prism.languages.insertBefore('r', 'comment', {
+        'heading': [
+          {
+            // title 1
+        	  // =======
+
+        	  // title 2
+        	  // -------
+        	  pattern: /\w+.*(?:\r?\n|\r)(?:====+|----+)/,
+            alias: 'operator'
+          },
+          {
+            // ### title 3
+            pattern: /(^\s*)###[^#].+/m,
+            lookbehind: true,
+            alias: 'operator'
+          }
+        ]
+      });
+
+      // prism highlight
+      Prism.highlightAll();
+    }
+  }
+
+  FlexDashboard.prototype = {
+    constructor: FlexDashboard,
+    init: init,
+    isMobilePhone: isMobilePhone,
+    isFillPage: isFillPage
+  };
+
+  return FlexDashboard;
+
+})();
+
+// utils
+window.FlexDashboardUtils = {
+  resizableImage: function(img) {
+    var src = img.attr('src');
+    var url = 'url("' + src + '")';
+    img.parent().css('background', url)
+                .css('background-size', 'contain')
+                .css('background-repeat', 'no-repeat')
+                .css('background-position', 'center')
+                .addClass('image-container');
+  },
+  setLocation: function(href) {
+    if (history && history.pushState) {
+      history.pushState(null, null, href);
+    } else {
+      window.location.replace(href);
+    }
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 10);
+    this.manageActiveNavbarMenu();
+  },
+  showPage: function(href) {
+    $('ul.navbar-nav li a[href="' + href + '"]').tab('show');
+    var baseUrl = this.urlWithoutHash(window.location.href);
+    var loc = baseUrl + href;
+    this.setLocation(loc);
+  },
+  showLinkedValue: function(href) {
+    // check for a page link
+    if ($('ul.navbar-nav li a[data-toggle=tab][href="' + href + '"]').length > 0)
+      this.showPage(href);
+    else
+      window.open(href);
+  },
+  urlWithoutHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(0, hashLoc);
+    else
+      return url;
+  },
+  urlHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(hashLoc);
+    else
+      return "";
+  },
+  manageActiveNavbarMenu: function () {
+    // remove active from currently active tabs
+    $('.navbar ul.nav .active').removeClass('active');
+    // find the active tab
+    var activeTab = $('.dashboard-page-wrapper.tab-pane.active');
+    if (activeTab.length > 0) {
+      var tabId = activeTab.attr('id');
+      if (tabId)
+        $(".navbar ul.nav a[href='#" + tabId + "']").tab("show");
+    }
+  }
+};
+
+window.FlexDashboard = new FlexDashboard();
+
+// empty content
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    if (container.find('p').length == 0)
+      return container;
+    else
+      return $();
+  }
+})
+
+// plot image
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('p')
+                    .children('img:only-child');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// plot image (figure style)
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.figure').children('img');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// htmlwidget
+window.FlexDashboardComponents.push({
+
+  init: function(dashboardContainer) {
+    // trigger "shown" after initial layout to force static htmlwidgets
+    // in runtime: shiny to be resized after the dom has been transformed
+    dashboardContainer.on('flexdashboard:layoutcomplete', function(event) {
+      setTimeout(function() {
+        dashboardContainer.trigger('shown');
+      }, 200);
+    });
+  },
+
+  find: function(container) {
+    return container.children('div[id^="htmlwidget-"],div.html-widget');
+  }
+});
+
+// gauge
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.html-widget.gauge');
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+
+  }
+
+});
+
+// shiny output
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.children('div[class^="shiny-"]');
+  }
+});
+
+// bootstrap table
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    var bsTable = container.find('table.table');
+    if (bsTable.length !== 0)
+      return bsTable;
+    else
+      return container.find('tr.header').parent('thead').parent('table');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var bsTable = element;
+
+    // fixup xtable generated tables with a proper thead
+    var headerRow = bsTable.find('tbody > tr:first-child > th').parent();
+    if (headerRow.length > 0) {
+      var thead = $('<thead></thead>');
+      bsTable.prepend(thead);
+      headerRow.detach().appendTo(thead);
+    }
+
+    // improve appearance
+    container.addClass('bootstrap-table');
+
+    // for fill page provide scrolling w/ sticky headers
+    if (fillPage) {
+      // force scrollbar on overflow
+      container.addClass('flowing-content-shim');
+
+      // stable table headers when scrolling
+      bsTable.stickyTableHeaders({
+        scrollableArea: container
+      });
+    }
+  }
+});
+
+// embedded shiny app
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('iframe.shiny-frame');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage) {
+      element.attr('height', '100%');
+    } else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (!height)
+        height = element.attr('height');
+      if (!height)
+        element.attr('height', 500);
+    }
+  }
+});
+
+// shiny fillRow or fillCol
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('.flexfill-container');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage)
+      element.css('height', '100%');
+    else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (height === "100%" || height === "auto" || height === "initial" ||
+          height === "inherit" || !height) {
+        element.css('height', 500);
+      }
+    }
+  }
+});
+
+// valueBox
+window.FlexDashboardComponents.push({
+
+  type: "custom",
+
+  find: function(container) {
+    if (container.find('span.value-output, .shiny-valuebox-output').length)
+      return container;
+    else
+      return $();
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var chartTitle = title;
+    var valueBox = element;
+
+    // add value-box class to container
+    container.addClass('value-box');
+
+    // value paragraph
+    var value = $('<p class="value"></p>');
+
+    // if we have shiny-text-output then just move it in
+    var valueOutputSpan = [];
+    var shinyOutput = valueBox.find('.shiny-valuebox-output').detach();
+    if (shinyOutput.length) {
+      valueBox.children().remove();
+      shinyOutput.html("&mdash;");
+      value.append(shinyOutput);
+    } else {
+      // extract the value (remove leading vector index)
+      var chartValue = valueBox.text().trim();
+      chartValue = chartValue.replace("[1] ", "");
+      valueOutputSpan = valueBox.find('span.value-output').detach();
+      valueBox.children().remove();
+      value.text(chartValue);
+    }
+
+    // caption
+    var caption = $('<p class="caption"></p>');
+    caption.append(chartTitle);
+
+    // build inner div for value box and add it
+    var inner = $('<div class="inner"></div>');
+    inner.append(value);
+    inner.append(caption);
+    valueBox.append(inner);
+
+    // add icon if specified
+    var icon = $('<div class="icon"><i></i></div>');
+    valueBox.append(icon);
+    function setIcon(chartIcon) {
+      var iconLib = "";
+      var iconSplit = chartIcon.split(" ");
+      if (iconSplit.length > 1) {
+        iconLib = iconSplit[0];
+        chartIcon = iconSplit.slice(1).join(" ");
+      } else {
+        var components = chartIcon.split("-");
+        if (components.length > 1)
+          iconLib = components[0];
+      }
+      icon.children('i').attr('class', iconLib + ' ' + chartIcon);
+    }
+    var chartIcon = valueBox.attr('data-icon');
+    if (chartIcon)
+      setIcon(chartIcon);
+
+    // handle data attributes in valueOutputSpan
+    function handleValueOutput(valueOutput) {
+
+      // caption
+      var dataCaption = valueOutput.attr('data-caption');
+      if (dataCaption)
+        caption.html(dataCaption);
+
+      // icon
+      var dataIcon = valueOutput.attr('data-icon');
+      if (dataIcon)
+        setIcon(dataIcon);
+
+      // If valueBox(color=) was an accent color, this attr should
+      // be populated with the accent color and the relevant CSS comes
+      // in through HTML dependencies
+      var dataColorAccent = valueOutput.attr('data-color-accent');
+      var valueBoxClasses = "value-box-" + (["primary", "info", "danger", "warning", "success"].join(" value-box-"));
+      if (dataColorAccent) {
+        valueBox.removeClass(valueBoxClasses);
+        valueBox.addClass('value-box-' + dataColorAccent);
+      }
+
+      // If valueBox(color=) was a CSS color, these other data-color-*
+      // attrs will be populated
+      var dataColor = valueOutput.attr('data-color');
+      if (dataColor) {
+        valueBox.removeClass(valueBoxClasses);
+        valueBox.css('background-color', dataColor);
+      }
+      var dataColorText = valueOutput.attr('data-color-text');
+      if (dataColorText) {
+        valueBox.find(".inner").css('color', dataColorText);
+      }
+      var dataColorIcon = valueOutput.attr('data-color-icon');
+      if (dataColorIcon) {
+        valueBox.find(".icon").css('color', dataColorIcon);
+      }
+
+      // url
+      var dataHref = valueOutput.attr('data-href');
+      if (dataHref) {
+        valueBox.addClass('linked-value');
+        valueBox.off('click.value-box');
+        valueBox.on('click.value-box', function(e) {
+          window.FlexDashboardUtils.showLinkedValue(dataHref);
+        });
+      }
+    }
+
+    // check for a valueOutputSpan
+    if (valueOutputSpan.length > 0) {
+      handleValueOutput(valueOutputSpan);
+    }
+
+    // if we have a shinyOutput then bind a listener to handle
+    // new valueOutputSpan values
+    shinyOutput.on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+          var valueOutputSpan = element.find('span.value-output');
+          if (valueOutputSpan.length > 0)
+            handleValueOutput(valueOutputSpan);
+        }, 10);
+      }
+    );
+  }
+});
+</script>
+
+<div id="dashboard-container">
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="info" class="section level1">
+<h1>Info</h1>
+<div id="about" class="section level2 sidebar">
+<h2 class="sidebar">About</h2>
+<p>The H.8 release provides an estimated weekly aggregate balance sheet
+for all commercial banks in the United States. The release also includes
+separate balance sheet aggregations for several bank groups:
+<strong>domestically chartered commercial banks</strong>; <strong>large
+domestically chartered commercial banks</strong>; <strong>small
+domestically chartered commercial banks</strong>; and
+<strong>foreign-related institutions</strong> in the United States.
+Published weekly, the release is typically available to the public by
+<em>4:15 p.m. each Friday</em>. If Friday is a federal holiday, then the
+data are released on Thursday. H.8 release is primarily based on data
+that are reported weekly by a sample of approximately 875 domestically
+chartered banks and foreign-related institutions.</p>
+</div>
+<div id="description" class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Description</h2>
+<div id="definitions" class="section level3">
+<h3>Definitions</h3>
+<ul>
+<li><p><strong>Large domestically chartered commercial banks (Large
+Domestic Banks)</strong> are defined as the top 25 domestically
+chartered commercial banks ranked by size.</p></li>
+<li><p><strong>Small domestically chartered commercial banks (Small
+Domestic Banks)</strong> are defined as all domestically chartered banks
+outside of the top 25.</p></li>
+<li><p><strong>Foreign-related institutions</strong> include U.S.
+branches and agencies of foreign banks as well as Edge Act and agreement
+corporations.</p></li>
+</ul>
+</div>
+<div id="download-data" class="section level3">
+<h3>Download Data</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="576" data-figure-id=fig1 /><img src="index_files/figure-html/unnamed-chunk-3-2.png" width="360" data-figure-id=fig1 /></p>
+</div>
+</div>
+</div>
+<div id="bank-credit" class="section level1"
+data-navmenu="Commercial Banks">
+<h1>Bank Credit</h1>
+<div id="stats" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-1" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+17380.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.00069 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.0054 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+2.30 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="bank-credit-1" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Bank Credit</h2>
+<div id="seasonally-adjusted" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="576" data-figure-id=fig1 /></p>
+</div>
+<div id="not-seasonally-adjusted" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="576" data-figure-id=fig2 /></p>
+</div>
+</div>
+<div id="bank-credit-difference"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Bank Credit (difference)</h2>
+<div id="seasonally-adjusted-1" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="576" data-figure-id=fig3 /></p>
+</div>
+<div id="not-seasonally-adjusted-1" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" width="576" data-figure-id=fig4 /></p>
+</div>
+</div>
+</div>
+<div id="borrowings" class="section level1"
+data-navmenu="Commercial Banks">
+<h1>Borrowings</h1>
+<div id="stats-2" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-3" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+2428.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.98 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+1.04 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+46.36 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="borrowings-1" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Borrowings</h2>
+<div id="seasonally-adjusted-2" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="576" data-figure-id=fig5 /></p>
+</div>
+<div id="not-seasonally-adjusted-2" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" width="576" data-figure-id=fig6 /></p>
+</div>
+</div>
+<div id="borrowings-difference"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Borrowings (Difference)</h2>
+<div id="seasonally-adjusted-3" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" width="576" data-figure-id=fig7 /></p>
+</div>
+<div id="not-seasonally-adjusted-3" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" width="576" data-figure-id=fig8 /></p>
+</div>
+</div>
+</div>
+<div id="consumer-loans" class="section level1"
+data-navmenu="Commercial Banks">
+<h1>Consumer Loans</h1>
+<div id="stats-4" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-5" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+1889.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+1.15 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+2.08 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+9.63 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="consumer-loans-1" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Consumer loans</h2>
+<div id="seasonally-adjusted-4" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" width="576" data-figure-id=fig9 /></p>
+</div>
+<div id="not-seasonally-adjusted-4" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="576" data-figure-id=fig10 /></p>
+</div>
+</div>
+<div id="consumer-loans-difference"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Consumer loans (Difference)</h2>
+<div id="seasonally-adjusted-5" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="576" data-figure-id=fig11 /></p>
+</div>
+<div id="not-seasonally-adjusted-5" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="576" data-figure-id=fig12 /></p>
+</div>
+</div>
+</div>
+<div id="real-estate-loans" class="section level1"
+data-navmenu="Commercial Banks">
+<h1>Real Estate Loans</h1>
+<div id="stats-6" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-7" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+5450.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.35 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+1.00 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+9.88 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="real-estate-loans-1"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Real estate loans</h2>
+<div id="seasonally-adjusted-6" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" width="576" data-figure-id=fig13 /></p>
+</div>
+<div id="not-seasonally-adjusted-6" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="576" data-figure-id=fig14 /></p>
+</div>
+</div>
+<div id="real-estate-loans-difference"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Real estate loans (Difference)</h2>
+<div id="seasonally-adjusted-7" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" width="576" data-figure-id=fig15 /></p>
+</div>
+<div id="not-seasonally-adjusted-7" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" width="576" data-figure-id=fig16 /></p>
+</div>
+</div>
+</div>
+<div id="mbs" class="section level1" data-navmenu="Commercial Banks">
+<h1>MBS</h1>
+<div id="stats-8" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-9" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+2613.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.40 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.23 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-10.31 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)</h2>
+<div id="seasonally-adjusted-8" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" width="576" data-figure-id=fig17 /></p>
+</div>
+<div id="not-seasonally-adjusted-8" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" width="576" data-figure-id=fig18 /></p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-difference"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)
+(Difference)</h2>
+<div id="seasonally-adjusted-9" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" width="576" data-figure-id=fig19 /></p>
+</div>
+<div id="not-seasonally-adjusted-9" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" width="576" data-figure-id=fig20 /></p>
+</div>
+</div>
+</div>
+<div id="bank-credit-2" class="section level1"
+data-navmenu="Domestic Banks">
+<h1>Bank Credit</h1>
+<div id="stats-10" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-11" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+16118
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.0016 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.0041 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+1.61 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="bank-credit-3" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Bank Credit</h2>
+<div id="seasonally-adjusted-10" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-30-1.png" width="576" data-figure-id=fig21 /></p>
+</div>
+<div id="not-seasonally-adjusted-10" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-31-1.png" width="576" data-figure-id=fig22 /></p>
+</div>
+</div>
+<div id="bank-credit-difference-1"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Bank Credit (difference)</h2>
+<div id="seasonally-adjusted-11" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-32-1.png" width="576" data-figure-id=fig23 /></p>
+</div>
+<div id="not-seasonally-adjusted-11" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-33-1.png" width="576" data-figure-id=fig24 /></p>
+</div>
+</div>
+</div>
+<div id="borrowings-2" class="section level1"
+data-navmenu="Domestic Banks">
+<h1>Borrowings</h1>
+<div id="stats-12" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-13" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+1502.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.44 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.39 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+123.57 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="borrowings-3" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Borrowings</h2>
+<div id="seasonally-adjusted-12" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-35-1.png" width="576" data-figure-id=fig25 /></p>
+</div>
+<div id="not-seasonally-adjusted-12" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-36-1.png" width="576" data-figure-id=fig26 /></p>
+</div>
+</div>
+<div id="borrowings-difference-1"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Borrowings (Difference)</h2>
+<div id="seasonally-adjusted-13" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-37-1.png" width="576" data-figure-id=fig27 /></p>
+</div>
+<div id="not-seasonally-adjusted-13" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-38-1.png" width="576" data-figure-id=fig28 /></p>
+</div>
+</div>
+</div>
+<div id="consumer-loans-2" class="section level1"
+data-navmenu="Domestic Banks">
+<h1>Consumer Loans</h1>
+<div id="stats-14" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-15" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+1889.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.039 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.81 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+8.40 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="consumer-loans-3" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Consumer loans</h2>
+<div id="seasonally-adjusted-14" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-40-1.png" width="576" data-figure-id=fig29 /></p>
+</div>
+<div id="not-seasonally-adjusted-14" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-41-1.png" width="576" data-figure-id=fig30 /></p>
+</div>
+</div>
+<div id="consumer-loans-difference-1"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Consumer loans (Difference)</h2>
+<div id="seasonally-adjusted-15" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-42-1.png" width="576" data-figure-id=fig31 /></p>
+</div>
+<div id="not-seasonally-adjusted-15" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-43-1.png" width="576" data-figure-id=fig32 /></p>
+</div>
+</div>
+</div>
+<div id="real-estate-loans-2" class="section level1"
+data-navmenu="Domestic Banks">
+<h1>Real Estate Loans</h1>
+<div id="stats-16" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-17" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+5344.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.011 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.62 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+9.43 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="real-estate-loans-3"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Real estate loans</h2>
+<div id="seasonally-adjusted-16" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-45-1.png" width="576" data-figure-id=fig33 /></p>
+</div>
+<div id="not-seasonally-adjusted-16" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-46-1.png" width="576" data-figure-id=fig34 /></p>
+</div>
+</div>
+<div id="real-estate-loans-difference-1"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Real estate loans (Difference)</h2>
+<div id="seasonally-adjusted-17" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-47-1.png" width="576" data-figure-id=fig35 /></p>
+</div>
+<div id="not-seasonally-adjusted-17" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-48-1.png" width="576" data-figure-id=fig36 /></p>
+</div>
+</div>
+</div>
+<div id="mbs-1" class="section level1" data-navmenu="Domestic Banks">
+<h1>MBS</h1>
+<div id="stats-18" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-19" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+2586.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.40 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.43 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-10.04 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-1"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)</h2>
+<div id="seasonally-adjusted-18" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-50-1.png" width="576" data-figure-id=fig37 /></p>
+</div>
+<div id="not-seasonally-adjusted-18" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-51-1.png" width="576" data-figure-id=fig38 /></p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-difference-1"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)
+(Difference)</h2>
+<div id="seasonally-adjusted-19" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-52-1.png" width="576" data-figure-id=fig39 /></p>
+</div>
+<div id="not-seasonally-adjusted-19" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-53-1.png" width="576" data-figure-id=fig40 /></p>
+</div>
+</div>
+</div>
+<div id="bank-credit-4" class="section level1"
+data-navmenu="Large Domestic Banks">
+<h1>Bank Credit</h1>
+<div id="stats-20" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-21" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+10281.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.011 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-0.0098 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-0.97 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="bank-credit-5" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Bank Credit</h2>
+<div id="seasonally-adjusted-20" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-55-1.png" width="576" data-figure-id=fig41 /></p>
+</div>
+<div id="not-seasonally-adjusted-20" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-56-1.png" width="576" data-figure-id=fig42 /></p>
+</div>
+</div>
+<div id="bank-credit-difference-2"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Bank Credit (difference)</h2>
+<div id="seasonally-adjusted-21" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-57-1.png" width="576" data-figure-id=fig43 /></p>
+</div>
+<div id="not-seasonally-adjusted-21" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-58-1.png" width="576" data-figure-id=fig44 /></p>
+</div>
+</div>
+</div>
+<div id="borrowings-4" class="section level1"
+data-navmenu="Large Domestic Banks">
+<h1>Borrowings</h1>
+<div id="stats-22" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-23" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+913.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-1.05 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-1.47 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+107.16 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="borrowings-5" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Borrowings</h2>
+<div id="seasonally-adjusted-22" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-60-1.png" width="576" data-figure-id=fig45 /></p>
+</div>
+<div id="not-seasonally-adjusted-22" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-61-1.png" width="576" data-figure-id=fig46 /></p>
+</div>
+</div>
+<div id="borrowings-difference-2"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Borrowings (Difference)</h2>
+<div id="seasonally-adjusted-23" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-62-1.png" width="576" data-figure-id=fig47 /></p>
+</div>
+<div id="not-seasonally-adjusted-23" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-63-1.png" width="576" data-figure-id=fig48 /></p>
+</div>
+</div>
+</div>
+<div id="consumer-loans-4" class="section level1"
+data-navmenu="Large Domestic Banks">
+<h1>Consumer Loans</h1>
+<div id="stats-24" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-25" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+1437.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-7.25 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-6.75 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-0.15 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="consumer-loans-5" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Consumer loans</h2>
+<div id="seasonally-adjusted-24" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-65-1.png" width="576" data-figure-id=fig49 /></p>
+</div>
+<div id="not-seasonally-adjusted-24" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-66-1.png" width="576" data-figure-id=fig50 /></p>
+</div>
+</div>
+<div id="consumer-loans-difference-2"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Consumer loans (Difference)</h2>
+<div id="seasonally-adjusted-25" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-67-1.png" width="576" data-figure-id=fig51 /></p>
+</div>
+<div id="not-seasonally-adjusted-25" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-68-1.png" width="576" data-figure-id=fig52 /></p>
+</div>
+</div>
+</div>
+<div id="real-estate-loans-4" class="section level1"
+data-navmenu="Large Domestic Banks">
+<h1>Real Estate Loans</h1>
+<div id="stats-26" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-27" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+2416.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.13 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-0.032 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+3.82 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="real-estate-loans-5"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Real estate loans</h2>
+<div id="seasonally-adjusted-26" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-70-1.png" width="576" data-figure-id=fig53 /></p>
+</div>
+<div id="not-seasonally-adjusted-26" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-71-1.png" width="576" data-figure-id=fig54 /></p>
+</div>
+</div>
+<div id="real-estate-loans-difference-2"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Real estate loans (Difference)</h2>
+<div id="seasonally-adjusted-27" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-72-1.png" width="576" data-figure-id=fig55 /></p>
+</div>
+<div id="not-seasonally-adjusted-27" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-73-1.png" width="576" data-figure-id=fig56 /></p>
+</div>
+</div>
+</div>
+<div id="mbs-2" class="section level1"
+data-navmenu="Large Domestic Banks">
+<h1>MBS</h1>
+<div id="stats-28" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-29" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+1955.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.45 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.37 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-5.35 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-2"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)</h2>
+<div id="seasonally-adjusted-28" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-75-1.png" width="576" data-figure-id=fig57 /></p>
+</div>
+<div id="not-seasonally-adjusted-28" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-76-1.png" width="576" data-figure-id=fig58 /></p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-difference-2"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)
+(Difference)</h2>
+<div id="seasonally-adjusted-29" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-77-1.png" width="576" data-figure-id=fig59 /></p>
+</div>
+<div id="not-seasonally-adjusted-29" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-78-1.png" width="576" data-figure-id=fig60 /></p>
+</div>
+</div>
+</div>
+<div id="bank-credit-6" class="section level1"
+data-navmenu="Small Domestic Banks">
+<h1>Bank Credit</h1>
+<div id="stats-30" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-31" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+5836.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.024 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.03 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+6.49 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="bank-credit-7" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Bank Credit</h2>
+<div id="seasonally-adjusted-30" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-80-1.png" width="576" data-figure-id=fig61 /></p>
+</div>
+<div id="not-seasonally-adjusted-30" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-81-1.png" width="576" data-figure-id=fig62 /></p>
+</div>
+</div>
+<div id="bank-credit-difference-3"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Bank Credit (difference)</h2>
+<div id="seasonally-adjusted-31" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-82-1.png" width="576" data-figure-id=fig63 /></p>
+</div>
+<div id="not-seasonally-adjusted-31" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-83-1.png" width="576" data-figure-id=fig64 /></p>
+</div>
+</div>
+</div>
+<div id="borrowings-6" class="section level1"
+data-navmenu="Small Domestic Banks">
+<h1>Borrowings</h1>
+<div id="stats-32" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-33" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+588.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+2.85 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+3.41 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+154.93 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="borrowings-7" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Borrowings</h2>
+<div id="seasonally-adjusted-32" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-85-1.png" width="576" data-figure-id=fig65 /></p>
+</div>
+<div id="not-seasonally-adjusted-32" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-86-1.png" width="576" data-figure-id=fig66 /></p>
+</div>
+</div>
+<div id="borrowings-difference-3"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Borrowings (Difference)</h2>
+<div id="seasonally-adjusted-33" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-87-1.png" width="576" data-figure-id=fig67 /></p>
+</div>
+<div id="not-seasonally-adjusted-33" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-88-1.png" width="576" data-figure-id=fig68 /></p>
+</div>
+</div>
+</div>
+<div id="consumer-loans-6" class="section level1"
+data-navmenu="Small Domestic Banks">
+<h1>Consumer Loans</h1>
+<div id="stats-34" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-35" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+452.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+33.34 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+35.80 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+48.88 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="consumer-loans-7" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Consumer loans</h2>
+<div id="seasonally-adjusted-34" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-90-1.png" width="576" data-figure-id=fig69 /></p>
+</div>
+<div id="not-seasonally-adjusted-34" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-91-1.png" width="576" data-figure-id=fig70 /></p>
+</div>
+</div>
+<div id="consumer-loans-difference-3"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Consumer loans (Difference)</h2>
+<div id="seasonally-adjusted-35" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-92-1.png" width="576" data-figure-id=fig71 /></p>
+</div>
+<div id="not-seasonally-adjusted-35" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-93-1.png" width="576" data-figure-id=fig72 /></p>
+</div>
+</div>
+</div>
+<div id="real-estate-loans-6" class="section level1"
+data-navmenu="Small Domestic Banks">
+<h1>Real Estate Loans</h1>
+<div id="stats-36" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-37" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+2928.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.086 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+1.16 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+14.54 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="real-estate-loans-7"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Real estate loans</h2>
+<div id="seasonally-adjusted-36" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-95-1.png" width="576" data-figure-id=fig73 /></p>
+</div>
+<div id="not-seasonally-adjusted-36" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-96-1.png" width="576" data-figure-id=fig74 /></p>
+</div>
+</div>
+<div id="real-estate-loans-difference-3"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Real estate loans (Difference)</h2>
+<div id="seasonally-adjusted-37" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-97-1.png" width="576" data-figure-id=fig75 /></p>
+</div>
+<div id="not-seasonally-adjusted-37" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-98-1.png" width="576" data-figure-id=fig76 /></p>
+</div>
+</div>
+</div>
+<div id="mbs-3" class="section level1"
+data-navmenu="Small Domestic Banks">
+<h1>MBS</h1>
+<div id="stats-38" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-39" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+631.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+0.26 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.61 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-22.02 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-3"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)</h2>
+<div id="seasonally-adjusted-38" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-100-1.png" width="576" data-figure-id=fig77 /></p>
+</div>
+<div id="not-seasonally-adjusted-38" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-101-1.png" width="576" data-figure-id=fig78 /></p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-difference-3"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)
+(Difference)</h2>
+<div id="seasonally-adjusted-39" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-102-1.png" width="576" data-figure-id=fig79 /></p>
+</div>
+<div id="not-seasonally-adjusted-39" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-103-1.png" width="576" data-figure-id=fig80 /></p>
+</div>
+</div>
+</div>
+<div id="bank-credit-8" class="section level1"
+data-navmenu="Foreign Institutions">
+<h1>Bank Credit</h1>
+<div id="stats-40" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-41" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+1262.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.00034 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+8.5e-05 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+9.05 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="bank-credit-9" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Bank Credit</h2>
+<div id="seasonally-adjusted-40" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-105-1.png" width="576" data-figure-id=fig81 /></p>
+</div>
+<div id="not-seasonally-adjusted-40" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-106-1.png" width="576" data-figure-id=fig82 /></p>
+</div>
+</div>
+<div id="bank-credit-difference-4"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Bank Credit (difference)</h2>
+<div id="seasonally-adjusted-41" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-107-1.png" width="576" data-figure-id=fig83 /></p>
+</div>
+<div id="not-seasonally-adjusted-41" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-108-1.png" width="576" data-figure-id=fig84 /></p>
+</div>
+</div>
+</div>
+<div id="borrowings-8" class="section level1"
+data-navmenu="Foreign Institutions">
+<h1>Borrowings</h1>
+<div id="stats-42" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-43" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+926.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-3.92 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-1.10 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-3.59 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="borrowings-9" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Borrowings</h2>
+<div id="seasonally-adjusted-42" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-110-1.png" width="576" data-figure-id=fig85 /></p>
+</div>
+<div id="not-seasonally-adjusted-42" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-111-1.png" width="576" data-figure-id=fig86 /></p>
+</div>
+</div>
+<div id="borrowings-difference-4"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Borrowings (Difference)</h2>
+<div id="seasonally-adjusted-43" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-112-1.png" width="576" data-figure-id=fig87 /></p>
+</div>
+<div id="not-seasonally-adjusted-43" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-113-1.png" width="576" data-figure-id=fig88 /></p>
+</div>
+</div>
+</div>
+<div id="consumer-loans-8" class="section level1"
+data-navmenu="Foreign Institutions">
+<h1>Consumer Loans</h1>
+<div id="stats-44" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-45" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-100.00 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-100.00 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-100.00 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="consumer-loans-9" class="section level2 col tabset tabset-fade"
+width="10/20">
+<h2 class="col tabset tabset-fade">Consumer loans</h2>
+<div id="seasonally-adjusted-44" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-115-1.png" width="576" data-figure-id=fig89 /></p>
+</div>
+<div id="not-seasonally-adjusted-44" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-116-1.png" width="576" data-figure-id=fig90 /></p>
+</div>
+</div>
+<div id="consumer-loans-difference-4"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Consumer loans (Difference)</h2>
+<div id="seasonally-adjusted-45" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-117-1.png" width="576" data-figure-id=fig91 /></p>
+</div>
+<div id="not-seasonally-adjusted-45" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-118-1.png" width="576" data-figure-id=fig92 /></p>
+</div>
+</div>
+</div>
+<div id="real-estate-loans-8" class="section level1"
+data-navmenu="Foreign Institutions">
+<h1>Real Estate Loans</h1>
+<div id="stats-46" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-47" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+106.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+-0.61 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+0.83 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+11.46 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="real-estate-loans-9"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Real estate loans</h2>
+<div id="seasonally-adjusted-46" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-120-1.png" width="576" data-figure-id=fig93 /></p>
+</div>
+<div id="not-seasonally-adjusted-46" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-121-1.png" width="576" data-figure-id=fig94 /></p>
+</div>
+</div>
+<div id="real-estate-loans-difference-4"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Real estate loans (Difference)</h2>
+<div id="seasonally-adjusted-47" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-122-1.png" width="576" data-figure-id=fig95 /></p>
+</div>
+<div id="not-seasonally-adjusted-47" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-123-1.png" width="576" data-figure-id=fig96 /></p>
+</div>
+</div>
+</div>
+<div id="mbs-4" class="section level1"
+data-navmenu="Foreign Institutions">
+<h1>MBS</h1>
+<div id="stats-48" class="section level2 sidebar">
+<h2 class="sidebar">Stats</h2>
+<div id="stats-49" class="section level3">
+<h3>Stats:</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<table class=" lightable-minimal lightable-paper lightable-hover" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;">
+Last Value, bln $
+</td>
+<td style="text-align:left;">
+26.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from Last Week
+</td>
+<td style="text-align:left;">
+8.37 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 5 Weeks Ago
+</td>
+<td style="text-align:left;">
+-3.55 %
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Change from 1 Year Ago
+</td>
+<td style="text-align:left;">
+-21.64 %
+</td>
+</tr>
+</tbody>
+</table>
+<p>Summary for Seasonally Adjusted data.</p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-4"
+class="section level2 col tabset tabset-fade" width="10/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)</h2>
+<div id="seasonally-adjusted-48" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-125-1.png" width="576" data-figure-id=fig97 /></p>
+</div>
+<div id="not-seasonally-adjusted-48" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-126-1.png" width="576" data-figure-id=fig98 /></p>
+</div>
+</div>
+<div id="mortgage-backed-securities-mbs-difference-4"
+class="section level2 col tabset tabset-fade" width="5/20">
+<h2 class="col tabset tabset-fade">Mortgage-backed securities (MBS)
+(Difference)</h2>
+<div id="seasonally-adjusted-49" class="section level3">
+<h3>Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-127-1.png" width="576" data-figure-id=fig99 /></p>
+</div>
+<div id="not-seasonally-adjusted-49" class="section level3">
+<h3>Not Seasonally Adjusted</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-128-1.png" width="576" data-figure-id=fig100 /></p>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+  // add bootstrap table styles to pandoc tables
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed table-sm');
+
+  // initialize mathjax
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  FlexDashboard.init({
+    fillPage: true,
+    orientation: "columns",
+    storyboard: false,
+    defaultFigWidth: 576,
+    defaultFigHeight: 460,
+    defaultFigWidthMobile: 360,
+    defaultFigHeightMobile: 460,
+    resize_reload: true
+  });
+  var navbar = $(".navbar").first();
+  var body = $("body").first();
+  var sidebar = $(".section.sidebar").first();
+  function addNavbarPadding() {
+    var navHeight = navbar.outerHeight();
+    body.css("padding-top", (navHeight + 8) + "px");
+    sidebar.css("top", navHeight + "px");
+    var resizeEvent = window.document.createEvent("UIEvents");
+    resizeEvent.initUIEvent("resize", true, false, window, 0);
+    window.dispatchEvent(resizeEvent);
+  }
+  if (!window.Shiny) setTimeout(addNavbarPadding, 100);
+  $(document).on("shiny:idle", function() {
+    setTimeout(addNavbarPadding, 50);
+  });
+});
+</script>
+
+</body>
+</html>
