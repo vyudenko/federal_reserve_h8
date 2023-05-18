@@ -5,9 +5,10 @@ account: vyudenko
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9133640
-bundleId: 7231944
+bundleId: 7234867
 url: https://vyudenko.shinyapps.io/Federal_Reserve_H8/
-when: 1684376694.04208
-lastSyncTime: 1684376694.04209
+when: 1684430301.14225
+lastSyncTime: 1684430301.14232
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: _site.yml|Assets and Liabilities of Commercial Banks in the United States.xlsx|Commercial_Banks_NSA_monthly.csv|Commercial_Banks_SA_monthly.csv|Domestic_NSA_monthly.csv|Domestic_SA_monthly.csv|EDA.html|FedH8.Rmd|Foreign_NSA_monthly.csv|Foreign_SA_monthly.csv|Large_Domestic_NSA_monthly.csv|Large_Domestic_SA_monthly.csv|LICENSE|Small_Domestic_NSA_monthly.csv|Small_Domestic_SA_monthly.csv
