@@ -1,0 +1,13 @@
+name: docs
+title: docs
+username:
+account: 5xo08t-vadym-yudenko
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9133497
+bundleId: 7231795
+url: https://5xo08t-vadym-yudenko.shinyapps.io/docs/
+when: 1684372896.18224
+lastSyncTime: 1684372896.18226
+asMultiple: FALSE
+asStatic: TRUE

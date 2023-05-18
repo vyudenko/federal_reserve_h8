@@ -7,7 +7,7 @@ output:
     theme: 
       version: 3
       bootswatch: flatly
-runtime: shiny
+#runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -238,14 +238,14 @@ Published weekly, the release is typically available to the public by *4:15 p.m.
 
 This section provides you with the latest data on Assets and Liabilities of Commercial Banks in the United States. The data is presented in several forms, reflecting different aggregations and adjustments for seasonality. Click the button below to download the data as an Excel file.
 
-```{r}
+```{r, echo=FALSE}
 ui <- fluidPage(
-  downloadButton('downloadData', 'Download data', style = "color: #fff; background-color: #27ae60; border-color: #fff;padding: 15px 42px 15px 42px;margin: 15px 15px 15px 15px; ")
+downloadButton('downloadData', 'Download data', style = "color: #fff; background-color: #27ae60; border-color: #fff;padding: 15px 42px 15px 42px;margin: 15px 15px 15px 15px; ")
 )
 
 server <- function(input, output) {
   
-  output$downloadData <- downloadHandler(
+output$downloadData <- downloadHandler(
     filename = function() {
       paste('Assets and Liabilities of Commercial Banks in the United States ', Sys.Date(), '.xlsx', sep='')
     },
@@ -304,8 +304,8 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -326,8 +326,8 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -412,8 +412,8 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -434,8 +434,8 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -520,8 +520,8 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -542,8 +542,8 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -628,8 +628,8 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -650,8 +650,8 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -736,8 +736,8 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -758,8 +758,8 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -845,8 +845,8 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -867,8 +867,8 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -953,8 +953,8 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -975,8 +975,8 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -1061,8 +1061,8 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -1083,8 +1083,8 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -1169,8 +1169,8 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -1191,8 +1191,8 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -1277,8 +1277,8 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -1299,8 +1299,8 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -1386,8 +1386,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -1408,8 +1408,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -1494,8 +1494,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -1516,8 +1516,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -1602,8 +1602,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -1624,8 +1624,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -1710,8 +1710,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -1732,8 +1732,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -1818,8 +1818,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -1840,8 +1840,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -1927,8 +1927,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -1949,8 +1949,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -2035,8 +2035,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -2057,8 +2057,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -2143,8 +2143,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2165,8 +2165,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2251,8 +2251,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2273,8 +2273,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2359,8 +2359,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -2381,8 +2381,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -2468,8 +2468,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -2490,8 +2490,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -2576,8 +2576,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -2598,8 +2598,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
@@ -2684,8 +2684,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2706,8 +2706,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2792,8 +2792,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2814,8 +2814,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2900,8 +2900,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -2922,8 +2922,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
