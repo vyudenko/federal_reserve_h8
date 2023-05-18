@@ -29,6 +29,7 @@ library(shiny)
 library(lubridate)
 library(extrafont)
 library(rsconnect)
+library(calendR)
 ```
 
 ```{r}
@@ -55,10 +56,10 @@ for (i in 1:11) {
 colnames <- c("Date", "Bank credit", 
   "Securities in bank credit", 
   "Treasury and agency securities",
-  "Mortgage-backed securities (MBS)",
-  "Non-MBS",
+  "MBS",
+  "Non MBS",
   "Other securities",
-  "Mortgage-backed securities (MBS) other",
+  "MBS other",
   "Non-MBS other",
   "Loans and leases in bank credit", 
   "Commercial and industrial loans", 
@@ -92,7 +93,7 @@ colnames <- c("Date", "Bank credit",
   "Net due to related foreign offices",
   "Other liabilities including trading liabilities",
   "Total liabilities",
-  "Residual (Assets LESS Liabilities)") 
+  "Residual") 
 
 colnames <- gsub(" ", "_", colnames)
 
@@ -213,11 +214,92 @@ Foreign_SA_weekly <- rbind(Foreign_SA_weekly, update_10)
 Foreign_NSA_weekly <- rbind(Foreign_NSA_weekly, update_11)
 ```
 
+```{r}
+# Define a function to generate your plot
+plot_variable <- function(data, date_range, variable) {
+  data %>%
+    filter(Date >= date_range[1] & Date <= date_range[2]) %>%
+    ggplot(aes(x = Date, y = !!sym(variable))) +  # use !!sym() to convert string to symbol
+    geom_line(size = 2) +
+    geom_text(data = tail(data, n = 1), aes_string(label = variable), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+    #geom_point(data = tail(data, n = 1), size = 3, color = "blue") +
+    scale_x_date(date_breaks = get_date_breaks(date_range), date_labels = "%Y-%m-%d") +
+    labs(title = variable,
+         subtitle = "in billions $") +
+    theme_classic() +
+    theme(panel.grid.major = element_line()) +
+    theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
+          axis.title = element_blank(),
+          plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+          axis.text = element_text(size = 10, family = "mono"),
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.caption = element_text(face = "bold", family = "mono"))
+}
+
+# Define a function to generate the difference plot
+plot_difference <- function(data, date_range, variable) {
+  data %>%
+    filter(Date >= date_range[1] & Date <= date_range[2]) %>%
+    ggplot(aes(x = Date, y = c(0, diff(!!sym(variable))))) +  # use !!sym() to convert string to symbol
+    geom_line(size = 2) +
+    geom_hline(yintercept = 0, color = "red") +
+    scale_x_date(date_breaks = get_date_breaks(date_range), date_labels = "%Y-%m-%d") +
+    labs(title = paste(variable, "(Difference)"),
+         subtitle = "in billions $") +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
+          axis.title = element_blank(),
+          panel.grid.major = element_line(),
+          plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+          axis.text = element_text(size = 10, family = "mono"),
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.caption = element_text(face = "bold", family = "mono"))
+}
+
+get_date_breaks <- function(date_range) {
+  num_days <- as.numeric(difftime(date_range[2], date_range[1], units = "days"))
+  
+  if (num_days <= 30) {
+    "1 week"
+  } else if (num_days <= 90) {
+    "2 weeks"
+  } else if (num_days <= 180) {
+    "1 month"
+  } else if (num_days <= 365) {
+    "2 months"
+  } else {
+    "6 months"
+  }
+}
+
+# Then, within each page:
+# renderPlot({
+#   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+#   plot_variable(Foreign_SA_weekly, date_range_selected, 'MBS')
+# })
+
+# Then, within each page:
+# renderPlot({
+#   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+#   plot_difference(Commercial_Banks_NSA_weekly, date_range_selected, 'Bank_credit')
+# })
+
+```
+
+
 # Info
 
-## Executive Summary {.col width="10/20"}
+## Executive Summary {.col width="10/20" .tabset}
 
-TEXTTEXTTEXTTEXTTEX
+### Executive Summary
+
+
+adfijasdfhaskdhfbasdkhfb
+
+
+```{r}
+
+```
 
 
 
@@ -280,15 +362,25 @@ This can later be used to visualize the data in Excel or Tableau.
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
 
 ### Stats:
 
 ```{r}
 kable(t(summarise(Commercial_Banks_SA_weekly,
-  'Last Value, bln $' = last(Commercial_Banks_SA_weekly$Bank_credit),
-  'Change from Last Week' = paste0(format((last(Commercial_Banks_SA_weekly$Bank_credit) / nth(Commercial_Banks_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format(last(Commercial_Banks_SA_weekly$Bank_credit) / nth(Commercial_Banks_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Bank_credit) / nth(Commercial_Banks_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Commercial_Banks_SA_weekly$Bank_credit),
+  'Weekly Chage' = paste0(format((last(Commercial_Banks_SA_weekly$Bank_credit) / nth(Commercial_Banks_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format(last(Commercial_Banks_SA_weekly$Bank_credit) / nth(Commercial_Banks_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Commercial_Banks_SA_weekly$Bank_credit) / nth(Commercial_Banks_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F) %>% 
   kable_paper("hover", full_width = F)
@@ -301,45 +393,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Bank_credit)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_SA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Bank_credit)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_NSA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -347,57 +413,44 @@ Commercial_Banks_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Bank_credit)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_SA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 ### Not Seasonally Adjusted 
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Bank_credit)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_NSA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 # Borrowings {data-navmenu="Commercial Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Commercial_Banks_SA_weekly,
-  'Last Value, bln $' = last(Commercial_Banks_SA_weekly$Borrowings),
-  'Change from Last Week' = paste0(format((last(Commercial_Banks_SA_weekly$Borrowings) / nth(Commercial_Banks_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Borrowings) / nth(Commercial_Banks_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Borrowings) / nth(Commercial_Banks_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Commercial_Banks_SA_weekly$Borrowings),
+  'Weekly Chage' = paste0(format((last(Commercial_Banks_SA_weekly$Borrowings) / nth(Commercial_Banks_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Commercial_Banks_SA_weekly$Borrowings) / nth(Commercial_Banks_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Commercial_Banks_SA_weekly$Borrowings) / nth(Commercial_Banks_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -409,45 +462,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -455,57 +482,46 @@ Commercial_Banks_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Borrowings)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Borrowings)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 # Consumer Loans {data-navmenu="Commercial Banks"}
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Commercial_Banks_SA_weekly,
-  'Last Value, bln $' = last(Commercial_Banks_SA_weekly$Consumer_loans),
-  'Change from Last Week' = paste0(format((last(Commercial_Banks_SA_weekly$Consumer_loans) / nth(Commercial_Banks_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Consumer_loans) / nth(Commercial_Banks_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Consumer_loans) / nth(Commercial_Banks_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Commercial_Banks_SA_weekly$Consumer_loans),
+  'Weekly Chage' = paste0(format((last(Commercial_Banks_SA_weekly$Consumer_loans) / nth(Commercial_Banks_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Commercial_Banks_SA_weekly$Consumer_loans) / nth(Commercial_Banks_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Commercial_Banks_SA_weekly$Consumer_loans) / nth(Commercial_Banks_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -517,45 +533,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Consumer_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_SA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Consumer_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_NSA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -563,57 +553,44 @@ Commercial_Banks_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Consumer_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_SA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Consumer_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_NSA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 # Real Estate Loans {data-navmenu="Commercial Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Commercial_Banks_SA_weekly,
-  'Last Value, bln $' = last(Commercial_Banks_SA_weekly$Real_estate_loans),
-  'Change from Last Week' = paste0(format((last(Commercial_Banks_SA_weekly$Real_estate_loans) / nth(Commercial_Banks_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Real_estate_loans) / nth(Commercial_Banks_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Commercial_Banks_SA_weekly$Real_estate_loans) / nth(Commercial_Banks_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Commercial_Banks_SA_weekly$Real_estate_loans),
+  'Weekly Chage' = paste0(format((last(Commercial_Banks_SA_weekly$Real_estate_loans) / nth(Commercial_Banks_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Commercial_Banks_SA_weekly$Real_estate_loans) / nth(Commercial_Banks_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Commercial_Banks_SA_weekly$Real_estate_loans) / nth(Commercial_Banks_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -625,45 +602,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Real_estate_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_SA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Real_estate_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_NSA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -671,57 +622,44 @@ Commercial_Banks_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Real_estate_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_SA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Real_estate_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_NSA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 # MBS {data-navmenu="Commercial Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Commercial_Banks_SA_weekly,
-  'Last Value, bln $' = last(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`),
-  'Change from Last Week' = paste0(format((last(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Commercial_Banks_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Commercial_Banks_SA_weekly$MBS),
+  'Weekly Chage' = paste0(format((last(Commercial_Banks_SA_weekly$MBS) / nth(Commercial_Banks_SA_weekly$MBS, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Commercial_Banks_SA_weekly$MBS) / nth(Commercial_Banks_SA_weekly$MBS, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Commercial_Banks_SA_weekly$MBS) / nth(Commercial_Banks_SA_weekly$MBS, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -733,45 +671,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (MBS)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_SA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (MBS)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Commercial_Banks_NSA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -779,58 +691,44 @@ Commercial_Banks_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_SA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Commercial_Banks_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Commercial_Banks_NSA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 # Bank Credit {data-navmenu="Domestic Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
 
 ### Stats:
 
 ```{r}
 kable(t(summarise(Domestic_SA_weekly,
-  'Last Value, bln $' = last(Domestic_SA_weekly$Bank_credit),
-  'Change from Last Week' = paste0(format((last(Domestic_SA_weekly$Bank_credit) / nth(Domestic_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format(last(Domestic_SA_weekly$Bank_credit) / nth(Domestic_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Domestic_SA_weekly$Bank_credit) / nth(Domestic_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Domestic_SA_weekly$Bank_credit),
+  'Weekly Chage' = paste0(format((last(Domestic_SA_weekly$Bank_credit) / nth(Domestic_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format(last(Domestic_SA_weekly$Bank_credit) / nth(Domestic_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Domestic_SA_weekly$Bank_credit) / nth(Domestic_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -842,45 +740,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Bank_credit)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_SA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Bank_credit)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_NSA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -888,57 +760,44 @@ Domestic_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Bank_credit)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_SA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 ### Not Seasonally Adjusted 
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Bank_credit)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Bank Credit (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_NSA_weekly, date_range_selected, 'Bank_credit')
+})
 ```
 
 # Borrowings {data-navmenu="Domestic Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Domestic_SA_weekly,
-  'Last Value, bln $' = last(Domestic_SA_weekly$Borrowings),
-  'Change from Last Week' = paste0(format((last(Domestic_SA_weekly$Borrowings) / nth(Domestic_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Domestic_SA_weekly$Borrowings) / nth(Domestic_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Domestic_SA_weekly$Borrowings) / nth(Domestic_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Domestic_SA_weekly$Borrowings),
+  'Weekly Chage' = paste0(format((last(Domestic_SA_weekly$Borrowings) / nth(Domestic_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Domestic_SA_weekly$Borrowings) / nth(Domestic_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Domestic_SA_weekly$Borrowings) / nth(Domestic_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -950,45 +809,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -996,57 +829,44 @@ Domestic_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Borrowings)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Borrowings)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 # Consumer Loans {data-navmenu="Domestic Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Domestic_SA_weekly,
-  'Last Value, bln $' = last(Domestic_SA_weekly$Consumer_loans),
-  'Change from Last Week' = paste0(format((last(Domestic_SA_weekly$Consumer_loans) / nth(Domestic_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Domestic_SA_weekly$Consumer_loans) / nth(Domestic_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Domestic_SA_weekly$Consumer_loans) / nth(Domestic_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Domestic_SA_weekly$Consumer_loans),
+  'Weekly Chage' = paste0(format((last(Domestic_SA_weekly$Consumer_loans) / nth(Domestic_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Domestic_SA_weekly$Consumer_loans) / nth(Domestic_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Domestic_SA_weekly$Consumer_loans) / nth(Domestic_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1058,45 +878,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Consumer_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_SA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Consumer_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_NSA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1104,57 +898,44 @@ Domestic_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Consumer_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_SA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Consumer_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Consumer loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_NSA_weekly, date_range_selected, 'Consumer_loans')
+})
 ```
 
 # Real Estate Loans {data-navmenu="Domestic Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Domestic_SA_weekly,
-  'Last Value, bln $' = last(Domestic_SA_weekly$Real_estate_loans),
-  'Change from Last Week' = paste0(format((last(Domestic_SA_weekly$Real_estate_loans) / nth(Domestic_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Domestic_SA_weekly$Real_estate_loans) / nth(Domestic_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Domestic_SA_weekly$Real_estate_loans) / nth(Domestic_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Domestic_SA_weekly$Real_estate_loans),
+  'Weekly Chage' = paste0(format((last(Domestic_SA_weekly$Real_estate_loans) / nth(Domestic_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Domestic_SA_weekly$Real_estate_loans) / nth(Domestic_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Domestic_SA_weekly$Real_estate_loans) / nth(Domestic_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1166,45 +947,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Real_estate_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_SA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Real_estate_loans)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_NSA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1212,57 +967,44 @@ Domestic_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Real_estate_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_SA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(Real_estate_loans)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Real estate loans (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_NSA_weekly, date_range_selected, 'Real_estate_loans')
+})
 ```
 
 # MBS {data-navmenu="Domestic Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Domestic_SA_weekly,
-  'Last Value, bln $' = last(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`),
-  'Change from Last Week' = paste0(format((last(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Domestic_SA_weekly$MBS),
+  'Weekly Chage' = paste0(format((last(Domestic_SA_weekly$MBS) / nth(Domestic_SA_weekly$MBS, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Domestic_SA_weekly$MBS) / nth(Domestic_SA_weekly$MBS, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Domestic_SA_weekly$MBS) / nth(Domestic_SA_weekly$MBS, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1274,45 +1016,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (MBS)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_SA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (MBS)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Domestic_NSA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1320,58 +1036,44 @@ Domestic_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_SA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_difference(Domestic_NSA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 # Bank Credit {data-navmenu="Large Domestic Banks"}
 
 ## Stats {.sidebar}
 
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
 
 ### Stats:
 
 ```{r}
 kable(t(summarise(Large_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Large_Domestic_SA_weekly$Bank_credit),
-  'Change from Last Week' = paste0(format((last(Large_Domestic_SA_weekly$Bank_credit) / nth(Large_Domestic_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format(last(Large_Domestic_SA_weekly$Bank_credit) / nth(Large_Domestic_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Large_Domestic_SA_weekly$Bank_credit) / nth(Large_Domestic_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Large_Domestic_SA_weekly$Bank_credit),
+  'Weekly Chage' = paste0(format((last(Large_Domestic_SA_weekly$Bank_credit) / nth(Large_Domestic_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format(last(Large_Domestic_SA_weekly$Bank_credit) / nth(Large_Domestic_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Large_Domestic_SA_weekly$Bank_credit) / nth(Large_Domestic_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1387,8 +1089,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -1409,8 +1111,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -1472,14 +1174,27 @@ Large_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Large_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Large_Domestic_SA_weekly$Borrowings),
-  'Change from Last Week' = paste0(format((last(Large_Domestic_SA_weekly$Borrowings) / nth(Large_Domestic_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Large_Domestic_SA_weekly$Borrowings) / nth(Large_Domestic_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Large_Domestic_SA_weekly$Borrowings) / nth(Large_Domestic_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Large_Domestic_SA_weekly$Borrowings),
+  'Weekly Chage' = paste0(format((last(Large_Domestic_SA_weekly$Borrowings) / nth(Large_Domestic_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Large_Domestic_SA_weekly$Borrowings) / nth(Large_Domestic_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Large_Domestic_SA_weekly$Borrowings) / nth(Large_Domestic_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1491,45 +1206,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Large_Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Large_Domestic_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Large_Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Large_Domestic_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1580,14 +1269,28 @@ Large_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Large_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Large_Domestic_SA_weekly$Consumer_loans),
-  'Change from Last Week' = paste0(format((last(Large_Domestic_SA_weekly$Consumer_loans) / nth(Large_Domestic_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Large_Domestic_SA_weekly$Consumer_loans) / nth(Large_Domestic_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Large_Domestic_SA_weekly$Consumer_loans) / nth(Large_Domestic_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Large_Domestic_SA_weekly$Consumer_loans),
+  'Weekly Chage' = paste0(format((last(Large_Domestic_SA_weekly$Consumer_loans) / nth(Large_Domestic_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Large_Domestic_SA_weekly$Consumer_loans) / nth(Large_Domestic_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Large_Domestic_SA_weekly$Consumer_loans) / nth(Large_Domestic_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1603,8 +1306,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -1625,8 +1328,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -1688,14 +1391,27 @@ Large_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Large_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Large_Domestic_SA_weekly$Real_estate_loans),
-  'Change from Last Week' = paste0(format((last(Large_Domestic_SA_weekly$Real_estate_loans) / nth(Large_Domestic_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Large_Domestic_SA_weekly$Real_estate_loans) / nth(Large_Domestic_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Large_Domestic_SA_weekly$Real_estate_loans) / nth(Large_Domestic_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Large_Domestic_SA_weekly$Real_estate_loans),
+  'Weekly Chage' = paste0(format((last(Large_Domestic_SA_weekly$Real_estate_loans) / nth(Large_Domestic_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Large_Domestic_SA_weekly$Real_estate_loans) / nth(Large_Domestic_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Large_Domestic_SA_weekly$Real_estate_loans) / nth(Large_Domestic_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1711,8 +1427,8 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -1733,8 +1449,8 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -1796,14 +1512,27 @@ Large_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Large_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`),
-  'Change from Last Week' = paste0(format((last(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Large_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Large_Domestic_SA_weekly$MBS),
+  'Weekly Chage' = paste0(format((last(Large_Domestic_SA_weekly$MBS) / nth(Large_Domestic_SA_weekly$MBS, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Large_Domestic_SA_weekly$MBS) / nth(Large_Domestic_SA_weekly$MBS, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Large_Domestic_SA_weekly$MBS) / nth(Large_Domestic_SA_weekly$MBS, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1817,10 +1546,10 @@ Summary for Seasonally Adjusted data.
 ```{r}
 Large_Domestic_SA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
+  ggplot(aes(x = Date, y = MBS)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = MBS), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -1839,10 +1568,10 @@ Large_Domestic_SA_weekly %>%
 ```{r}
 Large_Domestic_NSA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
+  ggplot(aes(x = Date, y = MBS)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = MBS), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -1863,7 +1592,7 @@ Large_Domestic_NSA_weekly %>%
 ```{r}
 Large_Domestic_SA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
+  ggplot(aes(x = Date, y = c(0, diff(MBS)))) +
   geom_line(size = 2) +
   geom_hline(yintercept = 0, color = "red") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
@@ -1884,7 +1613,7 @@ Large_Domestic_SA_weekly %>%
 ```{r}
 Large_Domestic_NSA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
+  ggplot(aes(x = Date, y = c(0, diff(MBS)))) +
   geom_line(size = 2) +
   geom_hline(yintercept = 0, color = "red") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
@@ -1904,15 +1633,27 @@ Large_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
 
 ### Stats:
 
 ```{r}
 kable(t(summarise(Small_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Small_Domestic_SA_weekly$Bank_credit),
-  'Change from Last Week' = paste0(format((last(Small_Domestic_SA_weekly$Bank_credit) / nth(Small_Domestic_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format(last(Small_Domestic_SA_weekly$Bank_credit) / nth(Small_Domestic_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Small_Domestic_SA_weekly$Bank_credit) / nth(Small_Domestic_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Small_Domestic_SA_weekly$Bank_credit),
+  'Weekly Chage' = paste0(format((last(Small_Domestic_SA_weekly$Bank_credit) / nth(Small_Domestic_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format(last(Small_Domestic_SA_weekly$Bank_credit) / nth(Small_Domestic_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Small_Domestic_SA_weekly$Bank_credit) / nth(Small_Domestic_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -1928,8 +1669,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -1950,8 +1691,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -2013,14 +1754,27 @@ Small_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Small_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Small_Domestic_SA_weekly$Borrowings),
-  'Change from Last Week' = paste0(format((last(Small_Domestic_SA_weekly$Borrowings) / nth(Small_Domestic_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Small_Domestic_SA_weekly$Borrowings) / nth(Small_Domestic_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Small_Domestic_SA_weekly$Borrowings) / nth(Small_Domestic_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Small_Domestic_SA_weekly$Borrowings),
+  'Weekly Chage' = paste0(format((last(Small_Domestic_SA_weekly$Borrowings) / nth(Small_Domestic_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Small_Domestic_SA_weekly$Borrowings) / nth(Small_Domestic_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Small_Domestic_SA_weekly$Borrowings) / nth(Small_Domestic_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2032,45 +1786,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Small_Domestic_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Small_Domestic_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Small_Domestic_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Small_Domestic_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2121,14 +1849,27 @@ Small_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Small_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Small_Domestic_SA_weekly$Consumer_loans),
-  'Change from Last Week' = paste0(format((last(Small_Domestic_SA_weekly$Consumer_loans) / nth(Small_Domestic_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Small_Domestic_SA_weekly$Consumer_loans) / nth(Small_Domestic_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Small_Domestic_SA_weekly$Consumer_loans) / nth(Small_Domestic_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Small_Domestic_SA_weekly$Consumer_loans),
+  'Weekly Chage' = paste0(format((last(Small_Domestic_SA_weekly$Consumer_loans) / nth(Small_Domestic_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Small_Domestic_SA_weekly$Consumer_loans) / nth(Small_Domestic_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Small_Domestic_SA_weekly$Consumer_loans) / nth(Small_Domestic_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2144,8 +1885,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2166,8 +1907,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2229,14 +1970,27 @@ Small_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Small_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Small_Domestic_SA_weekly$Real_estate_loans),
-  'Change from Last Week' = paste0(format((last(Small_Domestic_SA_weekly$Real_estate_loans) / nth(Small_Domestic_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Small_Domestic_SA_weekly$Real_estate_loans) / nth(Small_Domestic_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Small_Domestic_SA_weekly$Real_estate_loans) / nth(Small_Domestic_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Small_Domestic_SA_weekly$Real_estate_loans),
+  'Weekly Chage' = paste0(format((last(Small_Domestic_SA_weekly$Real_estate_loans) / nth(Small_Domestic_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Small_Domestic_SA_weekly$Real_estate_loans) / nth(Small_Domestic_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Small_Domestic_SA_weekly$Real_estate_loans) / nth(Small_Domestic_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2252,8 +2006,8 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2274,8 +2028,8 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2337,14 +2091,27 @@ Small_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Small_Domestic_SA_weekly,
-  'Last Value, bln $' = last(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`),
-  'Change from Last Week' = paste0(format((last(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Small_Domestic_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Small_Domestic_SA_weekly$MBS),
+  'Weekly Chage' = paste0(format((last(Small_Domestic_SA_weekly$MBS) / nth(Small_Domestic_SA_weekly$MBS, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Small_Domestic_SA_weekly$MBS) / nth(Small_Domestic_SA_weekly$MBS, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Small_Domestic_SA_weekly$MBS) / nth(Small_Domestic_SA_weekly$MBS, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2358,10 +2125,10 @@ Summary for Seasonally Adjusted data.
 ```{r}
 Small_Domestic_SA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
+  ggplot(aes(x = Date, y = MBS)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = MBS), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -2380,10 +2147,10 @@ Small_Domestic_SA_weekly %>%
 ```{r}
 Small_Domestic_NSA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
+  ggplot(aes(x = Date, y = MBS)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = MBS), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
@@ -2404,7 +2171,7 @@ Small_Domestic_NSA_weekly %>%
 ```{r}
 Small_Domestic_SA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
+  ggplot(aes(x = Date, y = c(0, diff(MBS)))) +
   geom_line(size = 2) +
   geom_hline(yintercept = 0, color = "red") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
@@ -2425,7 +2192,7 @@ Small_Domestic_SA_weekly %>%
 ```{r}
 Small_Domestic_NSA_weekly %>% 
   tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
+  ggplot(aes(x = Date, y = c(0, diff(MBS)))) +
   geom_line(size = 2) +
   geom_hline(yintercept = 0, color = "red") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
@@ -2445,15 +2212,27 @@ Small_Domestic_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
 
 ### Stats:
 
 ```{r}
 kable(t(summarise(Foreign_SA_weekly,
-  'Last Value, bln $' = last(Foreign_SA_weekly$Bank_credit),
-  'Change from Last Week' = paste0(format((last(Foreign_SA_weekly$Bank_credit) / nth(Foreign_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format(last(Foreign_SA_weekly$Bank_credit) / nth(Foreign_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Foreign_SA_weekly$Bank_credit) / nth(Foreign_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Foreign_SA_weekly$Bank_credit),
+  'Weekly Chage' = paste0(format((last(Foreign_SA_weekly$Bank_credit) / nth(Foreign_SA_weekly$Bank_credit, n = -2) - 1), digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format(last(Foreign_SA_weekly$Bank_credit) / nth(Foreign_SA_weekly$Bank_credit, n = -5) - 1, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Foreign_SA_weekly$Bank_credit) / nth(Foreign_SA_weekly$Bank_credit, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2469,8 +2248,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -2491,8 +2270,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
@@ -2554,14 +2333,27 @@ Foreign_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Foreign_SA_weekly,
-  'Last Value, bln $' = last(Foreign_SA_weekly$Borrowings),
-  'Change from Last Week' = paste0(format((last(Foreign_SA_weekly$Borrowings) / nth(Foreign_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Foreign_SA_weekly$Borrowings) / nth(Foreign_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Foreign_SA_weekly$Borrowings) / nth(Foreign_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Foreign_SA_weekly$Borrowings),
+  'Weekly Chage' = paste0(format((last(Foreign_SA_weekly$Borrowings) / nth(Foreign_SA_weekly$Borrowings, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Foreign_SA_weekly$Borrowings) / nth(Foreign_SA_weekly$Borrowings, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Foreign_SA_weekly$Borrowings) / nth(Foreign_SA_weekly$Borrowings, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2573,45 +2365,19 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Foreign_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Foreign_SA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Foreign_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = Borrowings)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Borrowings",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+   date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+   plot_variable(Foreign_NSA_weekly, date_range_selected, 'Borrowings')
+})
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2662,14 +2428,27 @@ Foreign_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Foreign_SA_weekly,
-  'Last Value, bln $' = last(Foreign_SA_weekly$Consumer_loans),
-  'Change from Last Week' = paste0(format((last(Foreign_SA_weekly$Consumer_loans) / nth(Foreign_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Foreign_SA_weekly$Consumer_loans) / nth(Foreign_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Foreign_SA_weekly$Consumer_loans) / nth(Foreign_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Foreign_SA_weekly$Consumer_loans),
+  'Weekly Chage' = paste0(format((last(Foreign_SA_weekly$Consumer_loans) / nth(Foreign_SA_weekly$Consumer_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Foreign_SA_weekly$Consumer_loans) / nth(Foreign_SA_weekly$Consumer_loans, n = -5) - 1)  * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Foreign_SA_weekly$Consumer_loans) / nth(Foreign_SA_weekly$Consumer_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2685,8 +2464,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2707,8 +2486,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
@@ -2770,14 +2549,27 @@ Foreign_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Foreign_SA_weekly,
-  'Last Value, bln $' = last(Foreign_SA_weekly$Real_estate_loans),
-  'Change from Last Week' = paste0(format((last(Foreign_SA_weekly$Real_estate_loans) / nth(Foreign_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Foreign_SA_weekly$Real_estate_loans) / nth(Foreign_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Foreign_SA_weekly$Real_estate_loans) / nth(Foreign_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Foreign_SA_weekly$Real_estate_loans),
+  'Weekly Chage' = paste0(format((last(Foreign_SA_weekly$Real_estate_loans) / nth(Foreign_SA_weekly$Real_estate_loans, n = -2) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Foreign_SA_weekly$Real_estate_loans) / nth(Foreign_SA_weekly$Real_estate_loans, n = -5) - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Foreign_SA_weekly$Real_estate_loans) / nth(Foreign_SA_weekly$Real_estate_loans, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
   kable_minimal() %>%    kable_paper("hover", full_width = F)
 ```
@@ -2793,8 +2585,8 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2815,8 +2607,8 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
+  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
@@ -2878,16 +2670,31 @@ Foreign_NSA_weekly %>%
 
 ## Stats {.sidebar}
 
+### Choose date range
+
+```{r}
+inputPanel(
+  dateRangeInput(
+    inputId = "date_range",
+    label = "Select date range:",
+    start = Sys.Date() - 26*7, # default start date (26 weeks ago)
+    end = Sys.Date() # default end date (today)
+  )
+)
+```
+
+
 ### Stats:
 
 ```{r}
 kable(t(summarise(Foreign_SA_weekly,
-  'Last Value, bln $' = last(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`),
-  'Change from Last Week' = paste0(format((last(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 5 Weeks Ago' = paste0(format((last(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
-  'Change from 1 Year Ago' = paste0(format((last(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`) / nth(Foreign_SA_weekly$`Mortgage-backed_securities_(MBS)`, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
+  'Latest, bln $' = last(Foreign_SA_weekly$MBS),
+  'Weekly Chage' = paste0(format((last(Foreign_SA_weekly$MBS) / nth(Foreign_SA_weekly$MBS, n = -2) - 1 ) * 100, digits = 2, nsmall = 2), " %"),
+  '5-Week Change' = paste0(format((last(Foreign_SA_weekly$MBS) / nth(Foreign_SA_weekly$MBS, n = -5)  - 1) * 100, digits = 2, nsmall = 2), " %"),
+  '1-Year Change' = paste0(format((last(Foreign_SA_weekly$MBS) / nth(Foreign_SA_weekly$MBS, n = -52) - 1) * 100, digits = 2, nsmall = 2), " %")
 ))) %>%
-  kable_minimal() %>%    kable_paper("hover", full_width = F)
+  kable_minimal() %>%    
+  kable_paper("hover", full_width = F)
 ```
 
 Summary for Seasonally Adjusted data.
@@ -2897,45 +2704,21 @@ Summary for Seasonally Adjusted data.
 ### Seasonally Adjusted
 
 ```{r}
-Foreign_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (MBS)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+# Then, within each page:
+renderPlot({
+  date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+  plot_variable(Foreign_SA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Foreign_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
-  geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "#3EB489") +
-  geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "#3EB489") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (MBS)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "mono"))
+# Then, within each page:
+renderPlot({
+  date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+  plot_variable(Foreign_NSA_weekly, date_range_selected, 'MBS')
+})
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2943,43 +2726,22 @@ Foreign_NSA_weekly %>%
 ### Seasonally Adjusted
 
 ```{r}
-Foreign_SA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+renderPlot({
+  date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+  plot_difference(Foreign_SA_weekly, date_range_selected, 'MBS')
+})
+
 ```
 
 ### Not Seasonally Adjusted
 
 ```{r}
-Foreign_NSA_weekly %>% 
-  tail(n = 26) %>% 
-  ggplot(aes(x = Date, y = c(0, diff(`Mortgage-backed_securities_(MBS)`)))) +
-  geom_line(size = 2) +
-  geom_hline(yintercept = 0, color = "red") +
-  scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
-  labs(title = "Mortgage-backed securities (Difference)",
-       subtitle = "in billions $") +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
-        axis.title = element_blank(),
-        panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
-        axis.text = element_text(size = 10, family = "mono"),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "mono"))
+# Then, within each page:
+renderPlot({
+  date_range_selected <- input$date_range  # or input$date_range2, input$date_range3, etc.
+  plot_difference(Foreign_NSA_weekly, date_range_selected, 'MBS')
+})
+
 ```
 
 
