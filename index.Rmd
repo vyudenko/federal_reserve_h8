@@ -6,8 +6,8 @@ output:
     orientation: columns
     vertical_layout: fill
     theme: 
-      version: 4
-      bootswatch: minty
+      version: 3
+      bootswatch: flatly
 ---
 
 ```{r setup, include=FALSE}
@@ -26,6 +26,8 @@ library(readr)
 library(kableExtra)
 library(DT)
 library(shiny)
+library(lubridate)
+library(extrafont)
 ```
 
 ```{r}
@@ -46,7 +48,9 @@ for (i in 1:11) {
   
   tables[[paste0("table_", i)]] <- table
 }
+```
 
+```{r}
 colnames <- c("Date", "Bank credit", 
   "Securities in bank credit", 
   "Treasury and agency securities",
@@ -91,6 +95,8 @@ colnames <- c("Date", "Bank credit",
 
 colnames <- gsub(" ", "_", colnames)
 
+# important note! data is being published each friday. 
+# the code assumes that 
 today <- as.Date(format(Sys.Date(), "%Y-%m-%d"))
 
 # loading historical data from https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H8
@@ -208,16 +214,19 @@ Foreign_NSA_weekly <- rbind(Foreign_NSA_weekly, update_11)
 
 # Info
 
-## About {.sidebar}
+## Executive Summary {.col width="10/20"}
 
-The H.8 release provides an estimated weekly aggregate balance sheet for all commercial banks in the United States. The release also includes separate balance sheet aggregations for several bank groups: **domestically chartered commercial banks**; **large domestically chartered commercial banks**; **small domestically chartered commercial banks**; and **foreign-related institutions** in the United States.
-Published weekly, the release is typically available to the public by *4:15 p.m. each Friday*. If Friday is a federal holiday, then the data are released on Thursday. H.8 release is primarily based on data that are reported weekly by a sample of approximately 875 domestically chartered banks and foreign-related institutions.
+TEXTTEXTTEXTTEXTTEX
 
 
 
 ## Description {.tabset .tabset-fade}
 
-### Definitions 
+### About Data 
+
+The H.8 release provides an estimated weekly aggregate balance sheet for all commercial banks in the United States. The release also includes separate balance sheet aggregations for several bank groups: **domestically chartered commercial banks**; **large domestically chartered commercial banks**; **small domestically chartered commercial banks**; and **foreign-related institutions** in the United States.
+
+Published weekly, the release is typically available to the public by *4:15 p.m. each Friday*. If Friday is a federal holiday, then the data are released on Thursday. H.8 release is primarily based on data that are reported weekly by a sample of approximately 875 domestically chartered banks and foreign-related institutions.
 
  - **Large domestically chartered commercial banks (Large Domestic Banks)** are defined as the top 25 domestically chartered commercial banks ranked by size. 
 
@@ -225,20 +234,20 @@ Published weekly, the release is typically available to the public by *4:15 p.m.
 
  - **Foreign-related institutions** include U.S. branches and agencies of foreign banks as well as Edge Act and agreement corporations.
 
-
 ### Download Data
 
-```{r}
+This section provides you with the latest data on Assets and Liabilities of Commercial Banks in the United States. The data is presented in several forms, reflecting different aggregations and adjustments for seasonality. Click the button below to download the data as an Excel file.
 
+```{r}
 ui <- fluidPage(
-  downloadButton('downloadData', 'Download data')
+  downloadButton('downloadData', 'Download data', style = "color: #fff; background-color: #27ae60; border-color: #fff;padding: 15px 42px 15px 42px;margin: 15px 15px 15px 15px; ")
 )
 
 server <- function(input, output) {
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste('data-', Sys.Date(), '.xlsx', sep='')
+      paste('Assets and Liabilities of Commercial Banks in the United States ', Sys.Date(), '.xlsx', sep='')
     },
     content = function(file) {
       # Your data frames
@@ -264,9 +273,7 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-
-
-
+This can later be used to visualize the data in Excel or Tableau.
 
 # Bank Credit {data-navmenu="Commercial Banks"}
 
@@ -297,19 +304,19 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -319,19 +326,19 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -348,13 +355,13 @@ Commercial_Banks_SA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted 
@@ -369,13 +376,13 @@ Commercial_Banks_NSA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Borrowings {data-navmenu="Commercial Banks"}
@@ -405,19 +412,19 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -427,19 +434,19 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -456,13 +463,13 @@ Commercial_Banks_SA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -477,13 +484,13 @@ Commercial_Banks_NSA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Consumer Loans {data-navmenu="Commercial Banks"}
@@ -513,19 +520,19 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -535,19 +542,19 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -564,13 +571,13 @@ Commercial_Banks_SA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -585,13 +592,13 @@ Commercial_Banks_NSA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Real Estate Loans {data-navmenu="Commercial Banks"}
@@ -621,19 +628,19 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -643,19 +650,19 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -672,13 +679,13 @@ Commercial_Banks_SA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -693,13 +700,13 @@ Commercial_Banks_NSA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # MBS {data-navmenu="Commercial Banks"}
@@ -729,19 +736,19 @@ Commercial_Banks_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -751,19 +758,19 @@ Commercial_Banks_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Commercial_Banks_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Commercial_Banks_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -780,13 +787,13 @@ Commercial_Banks_SA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -801,13 +808,13 @@ Commercial_Banks_NSA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Bank Credit {data-navmenu="Domestic Banks"}
@@ -838,19 +845,19 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -860,19 +867,19 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -889,13 +896,13 @@ Domestic_SA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted 
@@ -910,13 +917,13 @@ Domestic_NSA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Borrowings {data-navmenu="Domestic Banks"}
@@ -946,19 +953,19 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -968,19 +975,19 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -997,13 +1004,13 @@ Domestic_SA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1018,13 +1025,13 @@ Domestic_NSA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Consumer Loans {data-navmenu="Domestic Banks"}
@@ -1054,19 +1061,19 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1076,19 +1083,19 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1105,13 +1112,13 @@ Domestic_SA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1126,13 +1133,13 @@ Domestic_NSA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Real Estate Loans {data-navmenu="Domestic Banks"}
@@ -1162,19 +1169,19 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1184,19 +1191,19 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1213,13 +1220,13 @@ Domestic_SA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1234,13 +1241,13 @@ Domestic_NSA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # MBS {data-navmenu="Domestic Banks"}
@@ -1270,19 +1277,19 @@ Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1292,19 +1299,19 @@ Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1321,13 +1328,13 @@ Domestic_SA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1342,13 +1349,13 @@ Domestic_NSA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Bank Credit {data-navmenu="Large Domestic Banks"}
@@ -1379,19 +1386,19 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1401,19 +1408,19 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1430,13 +1437,13 @@ Large_Domestic_SA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted 
@@ -1451,13 +1458,13 @@ Large_Domestic_NSA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Borrowings {data-navmenu="Large Domestic Banks"}
@@ -1487,19 +1494,19 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1509,19 +1516,19 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1538,13 +1545,13 @@ Large_Domestic_SA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1559,13 +1566,13 @@ Large_Domestic_NSA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Consumer Loans {data-navmenu="Large Domestic Banks"}
@@ -1595,19 +1602,19 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1617,19 +1624,19 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1646,13 +1653,13 @@ Large_Domestic_SA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1667,13 +1674,13 @@ Large_Domestic_NSA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Real Estate Loans {data-navmenu="Large Domestic Banks"}
@@ -1703,19 +1710,19 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1725,19 +1732,19 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1754,13 +1761,13 @@ Large_Domestic_SA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1775,13 +1782,13 @@ Large_Domestic_NSA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # MBS {data-navmenu="Large Domestic Banks"}
@@ -1811,19 +1818,19 @@ Large_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1833,19 +1840,19 @@ Large_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Large_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Large_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1862,13 +1869,13 @@ Large_Domestic_SA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1883,13 +1890,13 @@ Large_Domestic_NSA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Bank Credit {data-navmenu="Small Domestic Banks"}
@@ -1920,19 +1927,19 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -1942,19 +1949,19 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -1971,13 +1978,13 @@ Small_Domestic_SA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted 
@@ -1992,13 +1999,13 @@ Small_Domestic_NSA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Borrowings {data-navmenu="Small Domestic Banks"}
@@ -2028,19 +2035,19 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2050,19 +2057,19 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2079,13 +2086,13 @@ Small_Domestic_SA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2100,13 +2107,13 @@ Small_Domestic_NSA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Consumer Loans {data-navmenu="Small Domestic Banks"}
@@ -2136,19 +2143,19 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2158,19 +2165,19 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2187,13 +2194,13 @@ Small_Domestic_SA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2208,13 +2215,13 @@ Small_Domestic_NSA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Real Estate Loans {data-navmenu="Small Domestic Banks"}
@@ -2244,19 +2251,19 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2266,19 +2273,19 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2295,13 +2302,13 @@ Small_Domestic_SA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2316,13 +2323,13 @@ Small_Domestic_NSA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # MBS {data-navmenu="Small Domestic Banks"}
@@ -2352,19 +2359,19 @@ Small_Domestic_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2374,19 +2381,19 @@ Small_Domestic_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Small_Domestic_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Small_Domestic_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2403,13 +2410,13 @@ Small_Domestic_SA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2424,13 +2431,13 @@ Small_Domestic_NSA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Bank Credit {data-navmenu="Foreign Institutions"}
@@ -2461,19 +2468,19 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2483,19 +2490,19 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Bank_credit)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Bank_credit), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Bank Credit",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Bank Credit (difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2512,13 +2519,13 @@ Foreign_SA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted 
@@ -2533,13 +2540,13 @@ Foreign_NSA_weekly %>%
   labs(title = "Bank Credit (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Borrowings {data-navmenu="Foreign Institutions"}
@@ -2569,19 +2576,19 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2591,19 +2598,19 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Borrowings)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Borrowings), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Borrowings",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Borrowings (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2620,13 +2627,13 @@ Foreign_SA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2641,13 +2648,13 @@ Foreign_NSA_weekly %>%
   labs(title = "Borrowings (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Consumer Loans {data-navmenu="Foreign Institutions"}
@@ -2677,19 +2684,19 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2699,19 +2706,19 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Consumer_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Consumer_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Consumer loans",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Consumer loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2728,13 +2735,13 @@ Foreign_SA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2749,13 +2756,13 @@ Foreign_NSA_weekly %>%
   labs(title = "Consumer loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # Real Estate Loans {data-navmenu="Foreign Institutions"}
@@ -2785,19 +2792,19 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2807,19 +2814,19 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = Real_estate_loans)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = Real_estate_loans), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Real estate loans",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Real estate loans (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2836,13 +2843,13 @@ Foreign_SA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2857,13 +2864,13 @@ Foreign_NSA_weekly %>%
   labs(title = "Real estate loans (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 # MBS {data-navmenu="Foreign Institutions"}
@@ -2893,19 +2900,19 @@ Foreign_SA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_SA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_SA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2915,19 +2922,19 @@ Foreign_NSA_weekly %>%
   tail(n = 26) %>% 
   ggplot(aes(x = Date, y = `Mortgage-backed_securities_(MBS)`)) +
   geom_line(size = 2) +
-  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "Times", color = "blue") +
+  geom_text(data = tail(Foreign_NSA_weekly, n = 1), aes(label = `Mortgage-backed_securities_(MBS)`), hjust = 0.75, vjust = -0.6, face = "bold", family = "mono", color = "blue") +
   geom_point(data = tail(Foreign_NSA_weekly, n = 1), size = 3, color = "blue") +
   scale_x_date(date_breaks = "1 week", date_labels = "%Y-%m-%d") +
   labs(title = "Mortgage-backed securities (MBS)",
        subtitle = "in billions $") +
   theme_classic() +
   theme(panel.grid.major = element_line()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-         plot.caption = element_text(face = "bold", family = "Times"))
+         plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ## Mortgage-backed securities (MBS) (Difference) {.col width="5/20" .tabset .tabset-fade}
@@ -2944,13 +2951,13 @@ Foreign_SA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 ### Not Seasonally Adjusted
@@ -2965,13 +2972,13 @@ Foreign_NSA_weekly %>%
   labs(title = "Mortgage-backed securities (Difference)",
        subtitle = "in billions $") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Times"),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "mono"),
         axis.title = element_blank(),
         panel.grid.major = element_line(),
-        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "Times"),
-        axis.text = element_text(size = 10, family = "Times"),
+        plot.subtitle = element_text(hjust = 0.5, size = 8, face = "italic", family = "mono"),
+        axis.text = element_text(size = 10, family = "mono"),
         axis.text.x = element_text(angle = 90, hjust = 1),
-        plot.caption = element_text(face = "bold", family = "Times"))
+        plot.caption = element_text(face = "bold", family = "mono"))
 ```
 
 
