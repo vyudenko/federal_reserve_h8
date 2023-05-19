@@ -29,7 +29,7 @@ library(shiny)
 library(lubridate)
 library(extrafont)
 library(rsconnect)
-library(sendmailR)
+#library(sendmailR)
 ```
 
 ```{r}
